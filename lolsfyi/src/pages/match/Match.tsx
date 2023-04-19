@@ -1,4 +1,4 @@
-import { Box, Grid} from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React from "react";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,13 +8,13 @@ import scss from "./Match.module.scss";
 import MatchCard from "@/components/MatchCard/MatchCard";
 
 const mockMatchProps = {
-    TeamRed: "RNG",
-    TeamBlue: "EDG",
-    TeamRedScore: 3,
-    TeamBlueScore: 2,
-    TeamRedLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
-    TeamBlueLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/5/56/EDward_Gaminglogo_square.png/revision/latest/scale-to-width-down/1920?cb=20211024133123",
-    Date: "2021-10-10",
+    teamRed: "RNG",
+    teamBlue: "EDG",
+    teamRedScore: 3,
+    teamBlueScore: 2,
+    teamRedLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
+    teamBlueLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/5/56/EDward_Gaminglogo_square.png/revision/latest/scale-to-width-down/1920?cb=20211024133123",
+    date: "2021-10-10",
 }
 
 const Match = () => {
@@ -29,10 +29,10 @@ const Match = () => {
         <Box className={scss.wrapper}>
             <Box sx={{marginBottom: 5}}>
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}>
-                    <InputLabel id="demo-simple-select-standard-label">Leagues</InputLabel>
+                    <InputLabel id="match-league-select">Leagues</InputLabel>
                     <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
+                    labelId="match-league-select"
+                    id="match-league-select"
                     value={league}
                     onChange={handleChange}
                     label="Leagues"

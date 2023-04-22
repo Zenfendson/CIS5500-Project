@@ -91,6 +91,7 @@ const Player = () => {
                         </Paper>
                     </Grid>
                 </Grid>
+                <Grid container sx={{marginTop: '5vh'}}/>
             </Grid>
         </Box>
     )

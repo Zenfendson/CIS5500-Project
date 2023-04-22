@@ -1,10 +1,14 @@
 import React from "react";
 import { Box, Divider, Paper, Stack, Typography } from "@mui/material";
+import Image from "next/image";
 
 const mockedMatchPerformanceRed = [
     {
         "id": 1,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -14,7 +18,10 @@ const mockedMatchPerformanceRed = [
     },
     {
         "id": 2,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -24,7 +31,10 @@ const mockedMatchPerformanceRed = [
     },
     {
         "id": 3,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -34,7 +44,10 @@ const mockedMatchPerformanceRed = [
     },
     {
         "id": 4,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -44,7 +57,10 @@ const mockedMatchPerformanceRed = [
     },
     {
         "id": 5,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -57,7 +73,10 @@ const mockedMatchPerformanceRed = [
 const mockedMatchPerformanceBlue = [
     {
         "id": 6,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -67,7 +86,10 @@ const mockedMatchPerformanceBlue = [
     },
     {
         "id": 7,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -77,7 +99,10 @@ const mockedMatchPerformanceBlue = [
     },
     {
         "id": 8,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -87,7 +112,10 @@ const mockedMatchPerformanceBlue = [
     },
     {
         "id": 9,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -97,7 +125,10 @@ const mockedMatchPerformanceBlue = [
     },
     {
         "id": 10,
-        "champion": "Aatrox",
+        "player": "Uzi",
+        "position": "ADC",
+        "champion": "Kai'Sa",
+        "championImage": "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/",
         "kills": 3,
         "deaths": 0,
         "assists": 0,
@@ -109,7 +140,10 @@ const mockedMatchPerformanceBlue = [
 
 export type Performance = {
     id : number;
+    player: string;
+    position: string;
     champion : string;
+    championImage : string;
     kills : number;
     deaths : number;
     assists : number;
@@ -120,25 +154,72 @@ export type Performance = {
 
 const PlayerMatchCard = () => {
 
-    const PlayerPerformance = (performance : Performance) => {
+    const PlayerPerformanceRed = (performance : Performance) => {
         return (
-            <Box sx={{ width: "100%", height: '50px', backgroundColor:'wheat' }}> 
-                {performance.champion}
+            <Box sx={{ width: "100%", height: '96px', display: "flex", justifyContent: "center" }}>
+                <Box sx={{ width: "100%", height: '64px', display: "flex" }}> 
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "10px"}}>
+                        <Image src={performance.championImage} alt={performance.champion} width={64} height={64} />
+                        <Typography variant="body1">{performance.player}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                        <Typography variant="body2"><b>Champ:</b> {performance.champion}</Typography>
+                        <Typography variant="body2"><b>Pos:</b> {performance.position}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                        <Typography variant="body2"><b>KDA:</b> {performance.kills} / {performance.deaths} / {performance.kills}</Typography>
+                        <Typography variant="body2"><b>CS:</b> {performance.cs}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                        <Typography variant="body2"><b>Gold:</b> {performance.gold}</Typography>
+                        <Typography variant="body2"><b>Damage:</b> {performance.damage}</Typography>
+                    </Box>
+                </Box>
+            </Box>
+        ) 
+    }
+
+    const PlayerPerformanceBlue = (performance : Performance) => {
+        return (
+            <Box sx={{ width: "100%", height: '96px', display: "flex", justifyContent: "center" }}>
+                <Box sx={{ width: "100%", height: '64px', display: "flex" }}> 
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                        <Typography variant="body2"><b>Gold:</b> {performance.gold}</Typography>
+                        <Typography variant="body2"><b>Damage:</b> {performance.damage}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                        <Typography variant="body2"><b>KDA:</b> {performance.kills} / {performance.deaths} / {performance.kills}</Typography>
+                        <Typography variant="body2"><b>CS:</b> {performance.cs}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                        <Typography variant="body2"><b>Champ:</b> {performance.champion}</Typography>
+                        <Typography variant="body2"><b>Pos:</b> {performance.position}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "10px"}}>
+                        <Image src={performance.championImage} alt={performance.champion} width={64} height={64} />
+                        <Typography variant="body1">{performance.player}</Typography>
+                    </Box>
+                </Box>
             </Box>
         ) 
     }
 
     return (
-        <Stack spacing={0}>
-            <Typography variant="h6">Red Team</Typography>
-            {mockedMatchPerformanceRed.map((performance) => (
-                <><PlayerPerformance key={performance.id} {...performance} /><Divider /></>
-            ))}
-            <Typography variant="h6">Blue Team</Typography>
-            {mockedMatchPerformanceBlue.map((performance) => (
-                <><PlayerPerformance key={performance.id} {...performance} /><Divider /></>
-            ))}
-        </Stack>
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "20px 20px 20px 20px" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start"}}>
+                <Typography variant="h6" sx={{marginBottom: "10px", paddingLeft: "10px"}}>Red Team</Typography>
+                {mockedMatchPerformanceRed.map((performance) => (
+                    <><PlayerPerformanceRed key={performance.id} {...performance} /></>
+                ))}
+            </Box>
+            
+            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "flex-end"}}>
+                <Typography variant="h6" sx={{marginBottom: "10px"}}>Blue Team</Typography>
+                {mockedMatchPerformanceBlue.map((performance) => (
+                    <><PlayerPerformanceBlue key={performance.id} {...performance} /></>
+                ))}
+            </Box>
+        </Box>
     );
 };
 

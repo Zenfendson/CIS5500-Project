@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head'
-import Match from './match/Match'
+import Matches from './matches/Matches'
 import scss from './Home.module.scss';
 
 const Home : React.FC = () => {
@@ -13,7 +13,7 @@ const Home : React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={scss.main}>
-        <Match />
+        <Matches />
       </main>
     </>
   )

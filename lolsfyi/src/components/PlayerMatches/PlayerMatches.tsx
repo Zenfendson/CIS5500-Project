@@ -83,8 +83,7 @@ const PlayerMatches = (playerMatchesProps : PlayerMatchesProps) => {
                                 </Paper>
                                 <Typography variant="body2"> {match.date} </Typography>
                             </ListItemButton>
-                        </ListItem>
-                        
+                        </ListItem>  
                     ))}
                 </List>
             </Grid>

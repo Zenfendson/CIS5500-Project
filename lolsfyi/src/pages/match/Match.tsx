@@ -1,8 +1,22 @@
-import React from "react";
+import { Grid } from "@mui/material";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+
+const mockMatchProps = [{}];
 
 const Match = () => {
+    const router = useRouter();
+    const [match, setMatch] = useState<string | null>(null);
+
+    useEffect(() => {
+        const { match } = router.query;
+        setMatch(match as string);
+    }, [router.query]);
+
     return (
-        <h1>Match</h1>
+        <Grid container xs={12}>
+
+        </Grid>
     )
 }
 

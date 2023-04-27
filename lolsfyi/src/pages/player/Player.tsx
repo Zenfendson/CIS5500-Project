@@ -34,7 +34,6 @@ const Player = () => {
 
     useEffect(() => {
         const { name } = router.query;
-
         setPlayer(name as string);
     }, [router.query]);
 
@@ -56,8 +55,8 @@ const Player = () => {
     }
 
     return (
-        <Box className={scss.flex_wrapper}>
-            <Grid container spacing={2} sx={{width: '80vw', marginTop: '10vh'}}>
+        <Box className={scss.flex_wrapper} marginTop={5}>
+            <Grid container spacing={2} sx={{width: '80vw'}}>
                 <Grid item xs={12} sx={{display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center", marginBottom: "5vh"}}>
                     <Typography variant="h5" marginBottom={5}>Search a Player</Typography>
                     <ComboBox />

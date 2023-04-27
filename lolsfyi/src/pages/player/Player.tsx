@@ -1,18 +1,10 @@
-import { Box, Divider, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Typography } from "@mui/material";
-import React from "react";
+import { Box, Divider, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Typography, TextField, Autocomplete } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import scss from "./Player.module.scss";
-import { styled } from '@mui/material/styles';
 import PlayerCard from "@/components/PlayerCard/PlayerCard";
 import PlayerMatches from "@/components/PlayerMatches/PlayerMatches";
 import PlayerMatchCard from "@/components/PlayerMatchCard/PlayerMatchCard";
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+import { useRouter } from "next/router";
 
 const mockPlayerProps = {
     name: "Uzi",
@@ -26,8 +18,9 @@ const mockPlayerProps = {
 }
 
 const Player = () => {
-    const [league, setLeague] = React.useState('LPL');
-    const [year, setYear] = React.useState('2018');
+    const [player, setPlayer] = React.useState<string | null>(null);
+    const [league, setLeague] = React.useState<string | null>(null);
+    const [year, setYear] = React.useState<string | null>(null);
 
     const handleChangeLeague = (event: SelectChangeEvent) => {
         setLeague(event.target.value);
@@ -37,9 +30,39 @@ const Player = () => {
         setYear(event.target.value);
     };
 
+    const router = useRouter();
+
+    useEffect(() => {
+        const { name } = router.query;
+
+        setPlayer(name as string);
+    }, [router.query]);
+
+    const ComboBox = () => {
+        return (
+            <Autocomplete
+            disablePortal
+            id="player-auto-complete"
+            options={['Uzi', 'Faker']}
+            sx={{ width: 600 }}
+            renderInput={(params) => <TextField {...params} label="Player" />}
+            value={player}
+            onChange={(event: any, player: string | null) => {
+                setPlayer(player);
+                router.push(`/player?name=${player}`);
+            }}
+            />
+        );
+    }
+
     return (
         <Box className={scss.flex_wrapper}>
             <Grid container spacing={2} sx={{width: '80vw', marginTop: '10vh'}}>
+                <Grid item xs={12} sx={{display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center", marginBottom: "5vh"}}>
+                    <Typography variant="h5" marginBottom={5}>Search a Player</Typography>
+                    <ComboBox />
+                </Grid>
+                {player && (<>
                 <Grid item xs={12}>
                     <PlayerCard {...mockPlayerProps} />
                 </Grid>
@@ -52,10 +75,9 @@ const Player = () => {
                                 </Grid>
                                 <Grid xs={10} sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
                                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120}}>
-                                        <InputLabel id="demo-simple-select-standard-label">Filter by League</InputLabel>
+                                        <InputLabel id="select-by-league">by League</InputLabel>
                                         <Select
-                                        labelId="demo-simple-select-standard-label"
-                                        id="demo-simple-select-standard"
+                                        labelId="select-by-league"
                                         value={league}
                                         onChange={handleChangeLeague}
                                         label="Leagues"
@@ -65,10 +87,9 @@ const Player = () => {
                                         </Select>
                                     </FormControl>
                                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120}}>
-                                        <InputLabel id="demo-simple-select-standard-label">Filter by Year</InputLabel>
+                                        <InputLabel id="select-by-year">by Year</InputLabel>
                                         <Select
-                                        labelId="demo-simple-select-standard-label"
-                                        id="demo-simple-select-standard"
+                                        labelId="select-by-year"
                                         value={year}
                                         onChange={handleChangeYear}
                                         label="Year"
@@ -80,7 +101,7 @@ const Player = () => {
                                 </Grid>
                             </Grid>
                             <Divider sx={{width: '100%'}} />
-                            <Grid xs={12} overflow={'clip'} container>
+                            <Grid overflow={'clip'} container>
                                 <Grid xs={3.5} height={600} item>
                                     <PlayerMatches name={mockPlayerProps.name} league={league} year={year} />
                                 </Grid>
@@ -91,6 +112,8 @@ const Player = () => {
                         </Paper>
                     </Grid>
                 </Grid>
+                </>)}
+                
                 <Grid container sx={{marginTop: '5vh'}}/>
             </Grid>
         </Box>

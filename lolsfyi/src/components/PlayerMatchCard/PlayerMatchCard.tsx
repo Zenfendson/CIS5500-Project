@@ -209,14 +209,14 @@ const PlayerMatchCard = () => {
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start"}}>
                 <Typography variant="h6" sx={{marginBottom: "10px", paddingLeft: "10px"}}>Red Team</Typography>
                 {mockedMatchPerformanceRed.map((performance) => (
-                    <><PlayerPerformanceRed key={performance.id} {...performance} /></>
+                    <PlayerPerformanceRed key={performance.id} {...performance} />
                 ))}
             </Box>
             
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "flex-end"}}>
                 <Typography variant="h6" sx={{marginBottom: "10px"}}>Blue Team</Typography>
                 {mockedMatchPerformanceBlue.map((performance) => (
-                    <><PlayerPerformanceBlue key={performance.id} {...performance} /></>
+                    <PlayerPerformanceBlue key={performance.id} {...performance} />
                 ))}
             </Box>
         </Box>

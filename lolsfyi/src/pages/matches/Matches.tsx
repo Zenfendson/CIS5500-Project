@@ -28,7 +28,7 @@ const Matches = () => {
     return (
         <Box className={scss.wrapper}>
             <Box sx={{marginBottom: 5, width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', position: 'sticky'}}>
-                <Typography variant="h6">Red Team</Typography>
+                <Typography variant="body1">Red Team</Typography>
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5 }}>
                     <InputLabel id="match-league-select">Leagues</InputLabel>
                     <Select
@@ -43,7 +43,7 @@ const Matches = () => {
                     <MenuItem value="LCS">LCS</MenuItem>
                     </Select>
                 </FormControl>
-                <Typography variant="h6">Blue Team</Typography>
+                <Typography variant="body1">Blue Team</Typography>
             </Box>
             <Grid container gap={2} className={scss.matches}>
                 <MatchCard {...mockMatchProps} />

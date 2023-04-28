@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import ThemeToggleButton from '../ThemeToggleButton/ThemeToggleButton';
 import { useMediaQuery } from '@mui/material';
 
-const pages = ['Match', 'Stats', 'Player', 'Team'];
+const pages = ['Matches', 'Stats', 'Player', 'Team'];
 export type HeaderProps = {
   ColorModeContext: React.Context<{ toggleColorMode: () => void }>;
 };

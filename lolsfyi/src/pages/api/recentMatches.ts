@@ -17,8 +17,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
 
     // Fetch the recent matches and join with TeamPerformance table
+    
+    
+    // SELECT M.MatchID, T.TeamID, T.Teamname, T.Side, M.Win_side, M.Match_date
     const sqlQuery = `
-      SELECT *
+    SELECT M.MatchID,
+      MAX(CASE WHEN T.Side = 'Red' THEN T.Teamname END) AS teamRed,
+      MAX(CASE WHEN T.Side = 'Blue' THEN T.Teamname END) AS teamBlue,
+      SUM(CASE WHEN M.Win_side = 'Red' THEN 1 ELSE 0 END)/2 AS teamRedScore,
+      SUM(CASE WHEN M.Win_side = 'Blue' THEN 1 ELSE 0 END)/2 AS teamBlueScore,
+      NULL AS teamRedLogo,
+      NULL AS teamBlueLogo,
+      M.Match_date AS date
       FROM 
         (SELECT *
         FROM Matches
@@ -26,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ORDER BY Matches.Match_date DESC
         LIMIT ?, ?
         ) AS M 
-        JOIN TeamPerformance T ON M.MatchID = T.MatchID
+      JOIN TeamPerformance T ON M.MatchID = T.MatchID
+      GROUP BY M.MatchID, M.Match_date
     `;
     
     const results = await db.query(sqlQuery,[league, offset, pageSize]);

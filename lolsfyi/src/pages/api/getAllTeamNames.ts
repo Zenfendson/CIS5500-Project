@@ -4,7 +4,8 @@ import db from '../../lib/db';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Extract query parameters
   try {
-    const results = await db.query('SELECT Name, TeamID FROM Team');
+    const { name } = req.query;
+    const results = await db.query(`SELECT Name FROM Team WHERE LOWER(Name) LIKE LOWER('${name}%')`);
 
     // Close the database connection
     await db.end();

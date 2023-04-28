@@ -24,6 +24,20 @@ export type PlayerProps = {
     position: string;
 };
 
+export type Performance = {
+    id : number;
+    player: string;
+    position: string;
+    champion : string;
+    championImage : string;
+    kills : number;
+    deaths : number;
+    assists : number;
+    cs : number;
+    gold : number;
+    damage : number;
+}
+
 const Player = () => {
     const [player, setPlayer] = React.useState<string | null>(null);
     const [league, setLeague] = React.useState<string | null>(null);

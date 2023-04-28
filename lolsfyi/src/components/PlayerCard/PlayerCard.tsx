@@ -15,8 +15,19 @@ const PlayerCard = (playerProps: PlayerProps) => {
                 <Grid xs={12} sx={{display: 'flex', alignItems: 'center', marginTop: '5px'}}>
                     <Typography variant="h5"> <b>{playerProps.name}</b> </Typography>
                 </Grid>
-                <Grid xs={12} sx={{display: 'flex', alignItems: 'center', marginTop: '5px'}}>
-                    <Typography variant="body1"> {playerProps.realname} </Typography>
+                <Grid xs={12} container sx={{display: 'flex', alignItems: 'center', marginTop: '5px'}}>
+                    <Grid xs={4} container>
+                        <Typography variant="body2"> <b>League: </b> </Typography>
+                        <Typography variant="body2"> {playerProps.league} </Typography>
+                    </Grid>
+                    <Grid xs={4} container>
+                        <Typography variant="body2"> <b>Team: </b> </Typography>
+                        <Typography variant="body2"> {playerProps.team} </Typography>
+                    </Grid>
+                    <Grid xs={4} container>
+                        <Typography variant="body2"> <b>Position: </b> </Typography>
+                        <Typography variant="body2"> {playerProps.position} </Typography>
+                    </Grid>
                 </Grid>
                 <Grid xs={12} container sx={{display: 'flex', alignItems: 'center', marginTop: '5px'}}>
                     <Grid xs={4} container>

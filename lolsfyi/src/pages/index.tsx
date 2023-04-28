@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head'
-import Matches from './matches/Matches'
+// import Matches from './matches/Matches'
 import scss from './Home.module.scss';
 
 const Home : React.FC = () => {

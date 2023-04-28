@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -20,10 +20,20 @@ const mockMatchProps = {
 const Matches = () => {
 
     const [league, setLeague] = React.useState('LPL');
+    const [matches, setMatches] = React.useState([]);
+    const [page, setPage] = React.useState(1);
 
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleChangeLeague = (event: SelectChangeEvent) => {
         setLeague(event.target.value);
     };
+
+    // useEffect(() => {
+    //     setMatches([mockMatchProps, mockMatchProps, mockMatchProps, mockMatchProps, mockMatchProps]);
+    //     setPage(1);
+    // }, [league]);
+
+    // const res = await fetch(`https://jsonplaceholder.typicode.com/posts/1`);
+	// const data = await res.json();
 
     return (
         <Box className={scss.wrapper}>
@@ -35,7 +45,7 @@ const Matches = () => {
                     labelId="match-league-select"
                     id="match-league-select"
                     value={league}
-                    onChange={handleChange}
+                    onChange={handleChangeLeague}
                     label="Leagues"
                     >
                     <MenuItem value="LPL">LPL</MenuItem>

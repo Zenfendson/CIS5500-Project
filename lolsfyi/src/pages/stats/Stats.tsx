@@ -1,6 +1,6 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Autocomplete } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import React from "react";
+import React, { useEffect } from "react";
 import scss from "./Stats.module.scss";
 
 const mockPlayers = [
@@ -56,6 +56,7 @@ const Stats = () => {
     const [league, setLeague] = React.useState('LPL');
     const [patch, setPatch] = React.useState('1.1');
     const [name, setName] = React.useState('');
+    // const [allPlayers, setAllPlayers] = React.useState([]);
 
     const handleChangeScope = (event: SelectChangeEvent) => {
         setScope(event.target.value);
@@ -72,6 +73,12 @@ const Stats = () => {
     const handleChangeName = (event: SelectChangeEvent) => {
         setName(event.target.innerHTML);
     };
+
+    // useEffect(() => {
+    //     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getAllPlayerNames`)
+    //       .then((response) => response.json())
+    //       .then((json) => setAllPlayers(json));
+    // }, []);
     
     return (
         <Box className={scss.wrapper}>

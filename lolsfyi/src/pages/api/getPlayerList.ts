@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../lib/db';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  console.log("aaaaaaaaa");
   try {
     const { league, page, name, team, order , asc} = req.query;
     const conditions = {
@@ -10,7 +9,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         team: team && `team=${team}`,
         name: name && `name='${name}'`,
     };
-    // console.log("aaaaaaaaa");
     const whereClause = Object.values(conditions).filter(Boolean).join(' AND ');
     const winrateq = `select playername,
                 CASE
@@ -33,7 +31,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!page) {
         if (!order){
             try {
-              console.log("aaaaaaaaa");
                 const sqlQuery = `SELECT * FROM Players join (${winrateq}) as wr on wr.playername = name ${whereClause ? `WHERE ${whereClause}` : ''}`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection

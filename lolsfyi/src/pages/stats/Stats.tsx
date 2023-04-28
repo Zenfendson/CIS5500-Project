@@ -3,60 +3,56 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import React, { useEffect } from "react";
 import scss from "./Stats.module.scss";
 
-const mockPlayers = [
-    'Uzi', 'Jackeylove', 'Deft', 'Rookie',
+const playerOrders = [
+    'Team', 'League', 'Position', 'Player Name', 'Win Rate', 'Wins', 'Loses',
 ]
 
-const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    {
-      field: 'firstName',
-      headerName: 'First name',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 110,
-      editable: true,
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-    },
-  ];
-  
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
+const teamOrders = [
+    'Team ID', 'Name', 'League', 'Team Name', 'Win Rate',
+]
+
+const playerCols: GridColDef[] = [
+    { field: 'teamname', headerName: 'Team', width: 150 },
+    { field: 'league', headerName: 'League', width: 150 },
+    { field: 'position', headerName: 'Position', width: 150 },
+    { field: 'playername', headerName: 'Player Name', width: 150 },
+    { field: 'winrate', headerName: 'Win Rate', width: 150 },
+    { field: 'numberofwin', headerName: 'Wins', width: 150 },
+    { field: 'numberofloses', headerName: 'Loses', width: 150 },
+]
+
+const playerMap = new Map([
+    ['Team', 'teamname'],
+    ['League', 'league'],
+    ['Position', 'position'],
+    ['Player Name', 'playername'],
+    ['Win Rate', 'winrate'],
+    ['Wins', 'numberofwin'],
+    ['Loses', 'numberofloses'],
+]);
+
+const teamCols: GridColDef[] = [
+    { field: 'Teamname', headerName: 'Team Name', width: 150 },
+    { field: 'League', headerName: 'League', width: 150 },
+    { field: 'win_rate', headerName: 'Win Rate', width: 150 },
+]
+
+const teamMap = new Map([
+    ['Team Name', 'Teamname'],
+    ['League', 'League'],
+    ['Win Rate', 'win_rate'],
+]);
+
 
 const Stats = () => {
     const [scope, setScope] = React.useState('Player');
-    const [league, setLeague] = React.useState('LPL');
-    const [orderby, setOrderBy] = React.useState('1.1');
-    const [name, setName] = React.useState('');
-    // const [allPlayers, setAllPlayers] = React.useState([]);
+    const [league, setLeague] = React.useState<string | null>(null);
+    const [orderby, setOrderBy] = React.useState<string | null>(null);
+    const [order, setOrder] = React.useState<string | null>(null);
+    const [name, setName] = React.useState<string | null>(null);
+    const [leagues, setLeagues] = React.useState<Object[]>([]);
+    const [players, setPlayers] = React.useState<Object[]>([]);
+    const [rows, setRows] = React.useState<Object[]>([]);
 
     const handleChangeScope = (event: SelectChangeEvent) => {
         setScope(event.target.value);
@@ -70,15 +66,41 @@ const Stats = () => {
         setOrderBy(event.target.value);
     };
 
-    const handleChangeName = (event: SelectChangeEvent) => {
-        setName(event.target.innerHTML);
+    const handleChangeOrder = (event: SelectChangeEvent) => {
+        setOrder(event.target.value);
     };
 
-    // useEffect(() => {
-    //     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getAllPlayerNames`)
-    //       .then((response) => response.json())
-    //       .then((json) => setAllPlayers(json));
-    // }, []);
+    const handleChangeName = (event : any) => {
+        setName(event.target.value);
+        setPlayers([]);
+    };
+
+    const handleSubmitName = (event : any) => {
+        if (event.key === 'Enter') {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getPlayerByName?name=${name}`)
+                .then((response) => response.json())
+                .then((json) => setPlayers(json));
+        }
+    };
+
+    useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getAllLeagueNames`)
+            .then((response) => response.json())
+            .then((json) => setLeagues(json));
+    }, []);
+
+    useEffect(() => {
+        let url = `${process.env.NEXT_PUBLIC_API_URL}/api`;
+        url += scope === 'Player' ? '/getPlayerList' : '/getTeamList';
+        url += league ? `?league=${league}` : '';
+        url += orderby ? `&orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
+        url += order ? `&order=${order === 'Ascending' ? '1' : '0'}` : '';
+
+        console.log(url);
+        fetch(url)
+            .then((response) => response.json())
+            .then((json) => console.log(json));
+    });
     
     return (
         <Box className={scss.wrapper}>
@@ -87,11 +109,11 @@ const Stats = () => {
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}>
                         <InputLabel id="player-team-label">Player/Team</InputLabel>
                         <Select
-                        labelId="player-team-label"
-                        id="player-team"
-                        value={scope}
-                        onChange={handleChangeScope}
-                        label="Player/Team"
+                            labelId="player-team-label"
+                            id="player-team"
+                            value={scope}
+                            onChange={handleChangeScope}
+                            label="Player/Team"
                         >
                         <MenuItem value="Player">Player</MenuItem>
                         <MenuItem value="Team">Team</MenuItem>
@@ -102,15 +124,13 @@ const Stats = () => {
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}>
                         <InputLabel id="leagues-label">Leagues</InputLabel>
                         <Select
-                        labelId="leagues-label"
-                        id="leagues"
-                        value={league}
-                        onChange={handleChangeLeague}
-                        label="League"
+                            labelId="leagues-label"
+                            id="leagues"
+                            value={league}
+                            onChange={handleChangeLeague}
+                            label="League"
                         >
-                        <MenuItem value="LPL">LPL</MenuItem>
-                        <MenuItem value="LCK">LCK</MenuItem>
-                        <MenuItem value="LCS">LCS</MenuItem>
+                        {leagues.map((league) => <MenuItem value={league?.League}>{league?.League}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </Box>
@@ -118,14 +138,28 @@ const Stats = () => {
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}>
                         <InputLabel id="orderby-label">Order By</InputLabel>
                         <Select
-                        labelId="orderby-label"
-                        id="orderby"
-                        value={orderby}
-                        onChange={handleChangeOrderBy}
-                        label="Patch"
+                            labelId="orderby-label"
+                            id="orderby"
+                            value={orderby}
+                            onChange={handleChangeOrderBy}
+                            label="Patch"
                         >
-                        <MenuItem value="1.1">1.1</MenuItem>
-                        <MenuItem value="1.2">1.2</MenuItem>
+                        {scope === 'Player' ? playerOrders.map((order) => <MenuItem value={order}>{order}</MenuItem>) : teamOrders.map((order) => <MenuItem value={order}>{order}</MenuItem>)}
+                        </Select>
+                    </FormControl>
+                </Box>
+                <Box sx={{marginBottom: 5}}>
+                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}>
+                        <InputLabel id="order-label">Order</InputLabel>
+                        <Select
+                            labelId="order-label"
+                            id="order"
+                            value={order}
+                            onChange={handleChangeOrder}
+                            label="Patch"
+                        >
+                        <MenuItem value="Ascending">Ascending</MenuItem>
+                        <MenuItem value="Descending">Descending</MenuItem>
                         </Select>
                     </FormControl>
                 </Box>
@@ -133,19 +167,19 @@ const Stats = () => {
                     <Autocomplete
                         freeSolo
                         id="name-autocomplete"
-                        options={mockPlayers}
+                        options={players.map((player) => player?.Name)}
                         sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}
                         renderInput={(params) => <TextField {...params} label="Name" variant="standard" />}
-                        onChange={handleChangeName}
+                        onInputChange={handleChangeName}
+                        onKeyDown={handleSubmitName}
                     />
                 </Box>
             </Grid>
             <Box sx={{ height: 500, width: '100%', maxWidth: '70vw' }}>
                 <DataGrid
                     rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
+                    columns={scope === 'Player' ? playerCols : teamCols}
+                    paginationModel={{ page: 0, pageSize: 20 }}
                     // checkboxSelection
                     disableSelectionOnClick
                     // experimentalFeatures={{ newEditingApi: true }}

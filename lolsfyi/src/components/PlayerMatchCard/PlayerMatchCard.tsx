@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Divider, Paper, Stack, Typography } from "@mui/material";
 import Image from "next/image";
+import { Performance } from "@/pages/player/Player";
 
 const mockedMatchPerformanceRed = [
     {
@@ -137,20 +138,6 @@ const mockedMatchPerformanceBlue = [
         "damage": 0
     },
 ];
-
-export type Performance = {
-    id : number;
-    player: string;
-    position: string;
-    champion : string;
-    championImage : string;
-    kills : number;
-    deaths : number;
-    assists : number;
-    cs : number;
-    gold : number;
-    damage : number;
-}
 
 const PlayerMatchCard = () => {
 

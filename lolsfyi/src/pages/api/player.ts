@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Fetch the player information from the Players table
     const sqlQuery = `
-      SELECT *
+      SELECT Name as name, Teamname as team, NULL as avatar, League as league, Position As position
       FROM Players
       WHERE Name = ?
     `;

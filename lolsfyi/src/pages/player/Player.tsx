@@ -6,16 +6,23 @@ import PlayerMatches from "@/components/PlayerMatches/PlayerMatches";
 import PlayerMatchCard from "@/components/PlayerMatchCard/PlayerMatchCard";
 import { useRouter } from "next/router";
 
-const mockPlayerProps = {
+const mockPlayerProps : PlayerProps = {
     name: "Uzi",
     realname: "Jian Zi-Hao",
     team: "RNG",
     avatar: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221",
-    age: 23,
     league: "LPL",
-    birthdate: "1998-10-10",
     position: "ADC",
 }
+
+export type PlayerProps = {
+    name: string;
+    realname: string;
+    team: string;
+    avatar: string;
+    league: string;
+    position: string;
+};
 
 const Player = () => {
     const [player, setPlayer] = React.useState<string | null>(null);

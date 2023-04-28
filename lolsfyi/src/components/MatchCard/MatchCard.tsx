@@ -1,31 +1,31 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 import scss from "./MatchCard.module.scss";
+import { MatchProps } from "@/pages/matches/Matches";
 
-export type MatchProps = {
-    teamRed: string;
-    teamBlue: string;
-    teamRedScore: number;
-    teamBlueScore: number;
-    teamRedLogo: string;
-    teamBlueLogo: string;
-    date: string;
-};
 
 const MatchCard = (matchProps : MatchProps) => {
     return (
         <Box className={scss.wrapper}>
             <Paper className={scss.card}>
-                <Box className={scss.logo_with_name}>
-                    <Image className={scss.logo} src={matchProps.teamRedLogo} width={50} height={50} alt={matchProps.teamRed} />
-                    {matchProps.teamRed}
-                </Box>
-                <Typography variant="h4"> {matchProps.teamRedScore} - {matchProps.teamBlueScore} </Typography> 
-                <Box className={scss.logo_with_name}>
-                    <Image className={scss.logo} src={matchProps.teamBlueLogo} width={50} height={50} alt={matchProps.teamBlue} />
-                    {matchProps.teamBlue}
-                </Box>
+                <Grid container xs={12}>
+                    <Grid item xs={2} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <Image className={scss.logo} src={matchProps.teamRedLogo || ''} width={50} height={50} alt={matchProps.teamRed} />
+                    </Grid>
+                    <Grid item xs={3} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <Typography variant="body2"> {matchProps.teamRed} </Typography>
+                    </Grid>
+                    <Grid item xs={2} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <Typography variant="h4"> {matchProps.teamRedScore} - {matchProps.teamBlueScore} </Typography> 
+                    </Grid>
+                    <Grid item xs={3} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <Typography variant="body2"> {matchProps.teamBlue} </Typography>
+                    </Grid>
+                    <Grid item xs={2} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <Image className={scss.logo} src={matchProps.teamBlueLogo || ''} width={50} height={50} alt={matchProps.teamBlue} />
+                    </Grid>
+                </Grid>
             </Paper>
             <Typography variant="caption" sx={{marginTop: '10px'}}> {matchProps.date} </Typography>
         </Box>

@@ -54,7 +54,7 @@ const columns: GridColDef[] = [
 const Stats = () => {
     const [scope, setScope] = React.useState('Player');
     const [league, setLeague] = React.useState('LPL');
-    const [patch, setPatch] = React.useState('1.1');
+    const [orderby, setOrderBy] = React.useState('1.1');
     const [name, setName] = React.useState('');
     // const [allPlayers, setAllPlayers] = React.useState([]);
 
@@ -66,8 +66,8 @@ const Stats = () => {
         setLeague(event.target.value);
     };
 
-    const handleChangePatch = (event: SelectChangeEvent) => {
-        setPatch(event.target.value);
+    const handleChangeOrderBy = (event: SelectChangeEvent) => {
+        setOrderBy(event.target.value);
     };
 
     const handleChangeName = (event: SelectChangeEvent) => {
@@ -116,12 +116,12 @@ const Stats = () => {
                 </Box>
                 <Box sx={{marginBottom: 5}}>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}>
-                        <InputLabel id="patch-label">Patch</InputLabel>
+                        <InputLabel id="orderby-label">Order By</InputLabel>
                         <Select
-                        labelId="patch-label"
-                        id="patch"
-                        value={patch}
-                        onChange={handleChangePatch}
+                        labelId="orderby-label"
+                        id="orderby"
+                        value={orderby}
+                        onChange={handleChangeOrderBy}
                         label="Patch"
                         >
                         <MenuItem value="1.1">1.1</MenuItem>

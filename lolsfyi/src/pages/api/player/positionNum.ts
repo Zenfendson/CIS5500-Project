@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../lib/db'; // Import your serverless-mysql instance
+import db from '../../../lib/db'; // Import your serverless-mysql instance
 
 interface PlayerCountResult {
   player_count: number;

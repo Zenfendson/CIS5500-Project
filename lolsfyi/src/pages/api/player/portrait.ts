@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../lib/db'; // Import your serverless-mysql instance
+import db from '../../../lib/db'; // Import your serverless-mysql instance
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Extract the name query parameter

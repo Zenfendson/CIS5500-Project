@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../lib/db'; // Import your serverless-mysql instance
+import db from '../../../lib/db'; // Import your serverless-mysql instance
 
 const pageSize = 5; // Set the desired page size
 

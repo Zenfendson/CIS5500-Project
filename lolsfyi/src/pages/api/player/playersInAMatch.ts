@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../lib/db'; // Import your serverless-mysql instance
+import db from '../../../lib/db'; // Import your serverless-mysql instance
 
 interface PlayerPerformance {
   // Add the required fields from the PlayerPerformance table as needed

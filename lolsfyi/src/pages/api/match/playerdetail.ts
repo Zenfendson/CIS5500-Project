@@ -12,18 +12,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const sqlQuery = `
     select
-      ban1,ban2,ban3,ban4,ban5,
-      kills,deaths,assists,
-      dragons,barons,
-      firstblood, firsttower, firstdragon,
-      damagetochampions,totalgold,visionscore,
-      M.Match_date AS date,
-      M.GameLength
+    pp.Playername as name,pp.Position as position,pp.champion,
+    kills,deaths,assists,
+    CASE WHEN deaths = 0 THEN kills+assists ELSE (kills+assists)/deaths END AS KDA,
+    firstbloodvictim,
+    damagetochampions,total_cs, totalgold,visionscore
       FROM
       Matches AS M
-      JOIN TeamPerformance T ON M.MatchID = T.MatchID
-      WHERE M.MatchID = '${matchid}' and T.side = '${side}'
-      GROUP BY M.MatchID, M.Match_date
+      JOIN PlayerPerformance pp ON M.MatchID = pp.MatchID
+      WHERE M.MatchID = '${matchid}' and pp.side = '${side}'
+      GROUP BY M.MatchID, M.Match_date, pp.Playername, pp.Position, pp.champion
     `;
     
     const results = await db.query(sqlQuery);

@@ -31,8 +31,10 @@ export const CHAMPION_URL = (name : string) => {
 };
 
 export const TEAM_URL = (name : string) => {
-  name = name.toLowerCase().replaceAll(' ',"").trim();
-  console.log(name);
-  if (TEAM_LOGOS.has(name)) return TEAM_LOGOS.get(name);
+  if (name) {
+    name = name.toLowerCase().replaceAll(' ',"").trim();
+    if (TEAM_LOGOS.has(name)) return TEAM_LOGOS.get(name);
+  }
+
   return PLACEHOLDER_TEAM;
 }

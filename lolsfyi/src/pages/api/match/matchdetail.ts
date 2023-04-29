@@ -3,29 +3,33 @@ import db from '../../../lib/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Extract query parameters
-  const { matchid, side,posi } = req.query;
+  const { matchid, side } = req.query;
 
   // Validate the query parameters
-  if (!side || !matchid || !posi) {
-    return res.status(400).json({ error: 'Both matchid, position and side query parameters are required' });
+  if (!side || !matchid) {
+    return res.status(400).json({ error: 'Both matchid and side query parameters are required' });
   }
+
   try {
     const sqlQuery = `
     select
-  pp.Playername,pp.Position,pp.champion,
-  kills,deaths,assists,
-  CASE WHEN deaths = 0 THEN kills+assists ELSE (kills+assists)/deaths END AS KDA,
-  firstbloodvictim,
-  damagetochampions,total_cs, totalgold,visionscore
+      T.Teamname as teamname,
+      ban1,ban2,ban3,ban4,ban5,
+      kills,deaths,assists,
+      dragons,barons,
+      firstblood, firsttower, firstdragon,
+      damagetochampions,totalgold,visionscore,
+      M.Match_date AS date,
+      M.GameLength AS gamelength,
+      M.Win_side AS winside
       FROM
       Matches AS M
-      JOIN PlayerPerformance pp ON M.MatchID = pp.MatchID
-      WHERE M.MatchID = '${matchid}' and pp.side = '${side}' and pp.position = '${posi}'
-      GROUP BY M.MatchID, M.Match_date
+      JOIN TeamPerformance T ON M.MatchID = T.MatchID
+      WHERE M.MatchID = '${matchid}' and T.side = '${side}'
+      GROUP BY M.MatchID, M.Match_date, T.teamname
     `;
     
     const results = await db.query(sqlQuery);
-
     // Close the database connection
     await db.end();
 

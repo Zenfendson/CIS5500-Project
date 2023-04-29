@@ -231,7 +231,9 @@ const Player = () => {
                                     </Grid>
                                 </Grid>
                                 <Grid xs={8.5} height={600} item>
-                                    {selectedMatch ? <PlayerMatchCard playerPerformances={performances} /> : <Typography variant="h5" sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>Select a Match</Typography>}
+                                    {selectedMatch ? 
+                                    <PlayerMatchCard playerPerformances={performances} /> : 
+                                    <Typography variant="h5" sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>Select a Match</Typography>}
                                 </Grid>
                             </Grid>
                         </Paper>

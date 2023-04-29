@@ -76,7 +76,7 @@ const Matches = () => {
             </Box>
             <Grid container gap={2} className={scss.matches}>
                 {matches.map((match) => 
-                    <div onClick={() => router.push(`/match/?match=${match.MatchID}`)}>
+                    <div onClick={() => router.push(`/match/?matchID=${match.MatchID}`)}>
                         <MatchCard {...match} />
                     </div>
                 )}

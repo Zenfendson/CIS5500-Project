@@ -37,7 +37,6 @@ const Team = () => {
     const [isShow, setIsShow] = React.useState<boolean>(false);
     const [page, setPage] = React.useState<number>(1);
     const [totalPages, setTotalPages] = React.useState<number>(1);
-    const [selectedMatch, setSelectedMatch] = React.useState<string | null>(null);
     const [matches, setMatches] = React.useState<TwoTeamPerformance[]>([]);
     const router = useRouter();
 
@@ -83,7 +82,7 @@ const Team = () => {
     };
 
     const handleSelectMatch = (event : any, matchID: string) => {
-        setSelectedMatch(matchID);
+        router.push(`/match?matchID=${matchID}`);
     };
 
     const ComboBox = () => {

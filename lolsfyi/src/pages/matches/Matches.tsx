@@ -9,7 +9,7 @@ import MatchCard from "@/components/MatchCard/MatchCard";
 import { useRouter } from "next/router";
 
 export type MatchProps = {
-    MatchID: number;
+    MatchID: string;
     teamRed: string;
     teamBlue: string;
     teamRedScore: number;
@@ -39,14 +39,18 @@ const Matches = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recentMatches?league=${league}&page=${page}`)
               .then((response) => response.json())
               .then((json) => setMatches(json));
-        setTotalPages(5);
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/maxpagehome?league=${league}`)
+              .then((response) => response.json())
+              .then((json) => setTotalPages(json));
     }, []);
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recentMatches?league=${league}&page=${page}`)
               .then((response) => response.json())
               .then((json) => setMatches(json));
-        setTotalPages(5);
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/maxpagehome?league=${league}`)
+              .then((response) => response.json())
+              .then((json) => setTotalPages(json[0].maxPagination));
     }, [league, page]);
 
 

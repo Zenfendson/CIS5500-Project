@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import { Performance } from "@/pages/player/Player";
+import { PLACEHOLDER_CHAMPION, CHAMPION_URL } from "@/constants";
 
 const mockedMatchPerformanceRed = [
     {
@@ -139,28 +140,29 @@ const mockedMatchPerformanceBlue = [
     },
 ];
 
-const PlayerMatchCard = ( performances : Performance[] ) => {
+const PlayerMatchCard = ( playerPerformances : Performance[] ) => {
 
-    const RedPerformances : Performance[] = performances.slice(0, 5);
-    const BluePerformances : Performance[] = performances.slice(5, 10);
+    const performances = playerPerformances?.playerPerformances; 
+    const redPerformance : Performance[] = performances.slice(0, 5);
+    const bluePerformance : Performance[] = performances.slice(5, 10);
 
     const PlayerPerformanceRed = (performance : Performance) => {
         return (
             <Box sx={{ width: "100%", height: '96px', display: "flex", justifyContent: "center" }}>
                 <Box sx={{ width: "100%", height: '64px', display: "flex" }}> 
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "10px"}}>
-                        <Image src={performance.championImage} alt={performance.champion} width={64} height={64} />
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "5px"}}>
+                        <Image src={CHAMPION_URL(performance.champion)} alt={performance.champion} width={64} height={64} />
                         <Typography variant="body1">{performance.player}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "5px"}}>
                         <Typography variant="body2"><b>Champ:</b> {performance.champion}</Typography>
                         <Typography variant="body2"><b>Pos:</b> {performance.position}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "5px"}}>
                         <Typography variant="body2"><b>KDA:</b> {performance.kills} / {performance.deaths} / {performance.kills}</Typography>
                         <Typography variant="body2"><b>CS:</b> {performance.cs}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "5px"}}>
                         <Typography variant="body2"><b>Gold:</b> {performance.gold}</Typography>
                         <Typography variant="body2"><b>Damage:</b> {performance.damage}</Typography>
                     </Box>
@@ -173,20 +175,20 @@ const PlayerMatchCard = ( performances : Performance[] ) => {
         return (
             <Box sx={{ width: "100%", height: '96px', display: "flex", justifyContent: "center" }}>
                 <Box sx={{ width: "100%", height: '64px', display: "flex" }}> 
-                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "5px"}}>
                         <Typography variant="body2"><b>Gold:</b> {performance.gold}</Typography>
                         <Typography variant="body2"><b>Damage:</b> {performance.damage}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "5px"}}>
                         <Typography variant="body2"><b>KDA:</b> {performance.kills} / {performance.deaths} / {performance.kills}</Typography>
                         <Typography variant="body2"><b>CS:</b> {performance.cs}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "10px"}}>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "5px"}}>
                         <Typography variant="body2"><b>Champ:</b> {performance.champion}</Typography>
                         <Typography variant="body2"><b>Pos:</b> {performance.position}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "10px"}}>
-                        <Image src={performance.championImage} alt={performance.champion} width={64} height={64} />
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "5px"}}>
+                        <Image src={CHAMPION_URL(performance.champion)} alt={performance.champion} width={64} height={64} />
                         <Typography variant="body1">{performance.player}</Typography>
                     </Box>
                 </Box>
@@ -196,16 +198,16 @@ const PlayerMatchCard = ( performances : Performance[] ) => {
 
     return (
         <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "20px 20px 20px 20px" }}>
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start"}}>
-                <Typography variant="h6" sx={{marginBottom: "10px", paddingLeft: "10px"}}>Red Team</Typography>
-                {RedPerformances.map((performance) => (
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start"}}>
+                <Typography variant="h6" sx={{marginBottom: "10px"}}>Red Team</Typography>
+                {redPerformance?.map((performance) => (
                     <PlayerPerformanceRed key={performance.id} {...performance} />
                 ))}
             </Box>
             
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "flex-end"}}>
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "flex-end"}}>
                 <Typography variant="h6" sx={{marginBottom: "10px"}}>Blue Team</Typography>
-                {BluePerformances.map((performance) => (
+                {bluePerformance?.map((performance) => (
                     <PlayerPerformanceBlue key={performance.id} {...performance} />
                 ))}
             </Box>

@@ -1,64 +1,70 @@
-import { Autocomplete, Box, Divider, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, MenuItem, Pagination, Paper, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Divider, Grid, List, ListItem, ListItemButton, Pagination, Paper, TextField, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { CHAMPION_URL, PLACEHOLDER_PLAYER, TEAM_URL } from "@/constants";
 
-const mockMatchProps = {
-    team: "RNG",
-    fullname: "Royal Never Give Up",
-    teamLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
-    members: [
-        {   
-            name: "Uzi",
-            avatar: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221",
-        },
-        {   
-            name: "Uzi",
-            avatar: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221",
-        },
-        {   
-            name: "Uzi",
-            avatar: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221",
-        },
-        {   
-            name: "Uzi",
-            avatar: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221",
-        },
-        {   
-            name: "Uzi",
-            avatar: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221",
-        },
-    ]
+export type TeamMember = {
+    name: string;
+    avatar: string;
 }
 
 const Team = () => {
     const [team, setTeam] = React.useState<string | null>(null);
-    const [year, setYear] = React.useState<string | null>(null);
-
+    const [teams, setTeams] = React.useState<Object[]>([]);
+    const [members, setMembers] = React.useState<TeamMember[]>([]);
+    const [isShow, setIsShow] = React.useState<boolean>(false);
+    const [page, setPage] = React.useState<number>(1);
+    const [totalPages, setTotalPages] = React.useState<number>(1);
     const router = useRouter();
-
-    const handleChangeYear = (event: SelectChangeEvent) => {
-        setYear(event.target.value as string);
-    };
 
     useEffect(() => {
         const { name } = router.query;
-        setTeam(name as string);
+        if (name) {
+            setTeam(name as string);
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/members?teamname=${name}`)
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log(json);
+                    if (json.members.length > 0) {
+                        setIsShow(true);
+                    }
+                });
+        }
     }, [router.query]);
+
+    useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/members?teamname=${team}`)
+                .then((response) => response.json())
+                .then((json) => setMembers(json.members));
+        
+    }, [isShow, page, team]);
+
+    const handleChangeName = (event : any) => {
+        if (event.type === 'click') {
+            router.push(`/team?name=${event.target.textContent.toLowerCase()}`);
+        }
+    };
+
+    const handleSubmitName = (event : any) => {
+        if (event.key === 'Enter') {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getTeamsByName?name=${event.target.value}`)
+                .then((response) => response.json())
+                .then((json) => setTeams(json));
+        }
+    };
 
     const ComboBox = () => {
         return (
             <Autocomplete
             disablePortal
             id="team-auto-complete"
-            options={['RNG', 'EDG']}
+            options={teams.map((team) => team?.Name)}
             sx={{ width: 600 }}
-            renderInput={(params) => <TextField {...params} label="team" />}
-            value={team}
-            onChange={(event: any, team: string | null) => {
-                setTeam(team);
-                router.push(`/team?name=${team}`);
-            }}
+            renderInput={(params) => <TextField {...params} label="Search a Team" />}
+            onClose={() => setTeams([])}
+            onInputChange={handleChangeName}
+            onKeyDown={handleSubmitName}
             />
         );
     }
@@ -113,43 +119,21 @@ const Team = () => {
         <Box display={'flex'} justifyContent={'center'} marginTop={5}>
             <Grid container width={'80vw'}>
                 <Grid item xs={12} sx={{display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center", marginBottom: "5vh"}}>
-                    <Typography variant="h5" marginBottom={5}>Search a Team</Typography>
                     <ComboBox />
                 </Grid>
-                {team && (
+                {isShow && (
                     <>
                     <Grid item xs={12} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
-                        <Image src={mockMatchProps.teamLogo} width={150} height={150} alt={""} />
-                        <Typography variant="body1">{mockMatchProps.fullname}</Typography>
-                        <Typography variant="h5">{mockMatchProps.team}</Typography>
+                        <Image src={TEAM_URL(team)} width={150} height={150} alt={""} />
+                        <Typography variant="h5">{team?.toUpperCase()}</Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Box sx={{ maxWidth: 120 }}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel id="team-year-select">Year</InputLabel>
-                                <Select
-                                labelId="team-year-select"
-                                id="teamyeare-select"
-                                value={year}
-                                label="Year"
-                                onChange={handleChangeYear}
-                                >
-                                <MenuItem value={10}>2023</MenuItem>
-                                <MenuItem value={20}>2022</MenuItem>
-                                <MenuItem value={30}>2021</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    </Grid>
-                    <Grid container marginTop={5}>
-                            {mockMatchProps.members.map((member) => {
-                                return (
-                                    <Grid item xs={2.4} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
-                                        <Image src={member.avatar} width={120} height={120} alt={member.name} onClick={() => (router.push(`/player?name=${member.name}`))}/>
-                                        <Typography variant="body1">{member.name}</Typography>
-                                    </Grid>
-                                )
-                            })}
+                    <Grid container overflow={'scroll'} display={'flex'} alignItems={'center'} justifyContent={'space-around'} marginTop={5}>
+                            {members?.map((member) => (
+                                <Grid item key={member.name} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
+                                    <Image src={member.avatar || PLACEHOLDER_PLAYER} width={120} height={120} alt={member.name} style={{ cursor: 'pointer' }} onClick={() => (router.push(`/player?name=${member.name}`))} />
+                                    <Typography variant="body1">{member.name}</Typography>
+                                </Grid>
+                            ))}
                     </Grid>
                     <Grid container marginTop={5}>
                         <Grid item xs={12} height={680} paddingBottom={5}>

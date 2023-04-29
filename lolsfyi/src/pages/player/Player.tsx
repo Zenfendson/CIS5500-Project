@@ -56,6 +56,8 @@ const Player = () => {
     const [playerMatches, setPlayerMatches] = React.useState<MatchProps[]>([]);
     const [page, setPage] = React.useState<number>(1);
     const [pagenum, setPagenum] = React.useState<number>(1);
+    const [selectedMatch, setSelectedMatch] = React.useState<string | null>(null);
+    const [performances, setPerformances] = React.useState<Performance[]>([]);
 
     const router = useRouter();
 
@@ -81,6 +83,10 @@ const Player = () => {
         }
     };
 
+    const handleSelectMatch = (event : any, matchID: string) => {
+        setSelectedMatch(matchID);
+    };
+
     useEffect(() => {
         const { name } = router.query;
         if (name) {
@@ -102,32 +108,52 @@ const Player = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerstats?name=${player}`)  
             .then((response) => response.json())
             .then((json) => setPlayerStats(json[0]));
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}`)  
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&page=${page}`)  
             .then((response) => response.json())
-            .then((json) => setPlayerMatches(json));
+            .then((json) => {
+                setPlayerMatches(json);
+                setPagenum(json[0]?.maxPagination);
+            });
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/yearoptions?name=${player}`)
             .then((response) => response.json())
             .then((json) => setYears(json.map((years : Object) => years.year)));
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/leagueoptions?name=${player}`)
             .then((response) => response.json())
             .then((json) => setLeagues(json.map((leagues : Object) => leagues.league)));
-    }, [isShow]);
+    }, [isShow, page, player]);
 
     useEffect(() => {
         if (league && year) {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&league=${league}&year=${year}`)  
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&league=${league}&year=${year}&page=${page}`)  
             .then((response) => response.json())
-            .then((json) => setPlayerMatches(json));
+            .then((json) => {
+                setPlayerMatches(json);
+                setPagenum(json[0]?.maxPagination);
+            });
         } else if (league) {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&league=${league}`)  
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&league=${league}&page=${page}`)  
             .then((response) => response.json())
-            .then((json) => setPlayerMatches(json));
+            .then((json) => {
+                setPlayerMatches(json);
+                setPagenum(json[0]?.maxPagination);
+            });
         } else if (year) {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&year=${year}`)  
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&year=${year}&page=${page}`)  
             .then((response) => response.json())
-            .then((json) => setPlayerMatches(json));
+            .then((json) => {
+                setPlayerMatches(json);
+                setPagenum(json[0]?.maxPagination);
+            });
         }
-    }, [league, year]);
+    }, [league, year, page]);
+
+    useEffect(() => {
+        if (selectedMatch) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/inmatch?matchid=${selectedMatch}`)
+                .then((response) => response.json())
+                .then((json) => setPerformances(json));
+        }
+    }, [selectedMatch]);
 
     const ComboBox = () => {
         return (
@@ -194,7 +220,9 @@ const Player = () => {
                                     <Grid container className={scss.wrapper}>
                                         <Grid container height={550} overflow={'scroll'}>
                                             <List className={scss.list}>
-                                                {playerMatches.map((match) => <PlayerMatch key={match.MatchID} {...match} />)}
+                                                {playerMatches.map((match) => 
+                                                   <div onClick={(event) => handleSelectMatch(event, match.MatchID)}><PlayerMatch key={match.MatchID} {...match} /></div> 
+                                                )}
                                             </List>
                                         </Grid>
                                         <Grid container sx={{alignItems: 'center', justifyContent: 'center', marginBottom: '10px', height: '40px'}}>
@@ -203,7 +231,7 @@ const Player = () => {
                                     </Grid>
                                 </Grid>
                                 <Grid xs={8.5} height={600} item>
-                                    <PlayerMatchCard />
+                                    {selectedMatch ? <PlayerMatchCard playerPerformances={performances} /> : <Typography variant="h5" sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>Select a Match</Typography>}
                                 </Grid>
                             </Grid>
                         </Paper>

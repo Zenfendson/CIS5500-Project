@@ -9,6 +9,27 @@ export type TeamMember = {
     avatar: string;
 }
 
+export type TwoTeamPerformance = {
+    MatchID: string;
+    red_teamname: string;
+    red_ban1: string;
+    red_ban2: string;
+    red_ban3: string;
+    red_ban4: string;
+    red_ban5: string;
+    red_result: number;
+    blue_teamname: string;
+    blue_ban1: string;
+    blue_ban2: string;
+    blue_ban3: string;
+    blue_ban4: string;
+    blue_ban5: string;
+    blue_result: number;
+    red_champions: string;
+    blue_champions: string;
+    date: string;
+}
+
 const Team = () => {
     const [team, setTeam] = React.useState<string | null>(null);
     const [teams, setTeams] = React.useState<Object[]>([]);
@@ -16,6 +37,8 @@ const Team = () => {
     const [isShow, setIsShow] = React.useState<boolean>(false);
     const [page, setPage] = React.useState<number>(1);
     const [totalPages, setTotalPages] = React.useState<number>(1);
+    const [selectedMatch, setSelectedMatch] = React.useState<string | null>(null);
+    const [matches, setMatches] = React.useState<TwoTeamPerformance[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -25,7 +48,6 @@ const Team = () => {
             fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/members?teamname=${name}`)
                 .then((response) => response.json())
                 .then((json) => {
-                    console.log(json);
                     if (json.members.length > 0) {
                         setIsShow(true);
                     }
@@ -37,7 +59,13 @@ const Team = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/members?teamname=${team}`)
                 .then((response) => response.json())
                 .then((json) => setMembers(json.members));
-        
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/recentMatches?teamname=${team}&page=${page}`)
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log(json)
+                    setMatches(json);
+                    setTotalPages(json[0]?.maxPagination);
+                });
     }, [isShow, page, team]);
 
     const handleChangeName = (event : any) => {
@@ -52,6 +80,10 @@ const Team = () => {
                 .then((response) => response.json())
                 .then((json) => setTeams(json));
         }
+    };
+
+    const handleSelectMatch = (event : any, matchID: string) => {
+        setSelectedMatch(matchID);
     };
 
     const ComboBox = () => {
@@ -69,47 +101,79 @@ const Team = () => {
         );
     }
 
-    const TeamMatch = () => {
+    const TeamMatch = ( twoTeamPerformance : TwoTeamPerformance ) => {
+        const redPicks = twoTeamPerformance.red_champions.split(',');
+        const bluePicks = twoTeamPerformance.blue_champions.split(',');
         return (
             <ListItem>
-                <ListItemButton sx={{display: 'flex', flexDirection: 'column'}}>
+                <ListItemButton sx={{display: 'flex', flexDirection: 'column'}} onClick={(event) => handleSelectMatch(event, twoTeamPerformance.MatchID)}>
                     <Grid container height={80} minWidth={1000}>
                         <Grid item xs={1} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <Box sx={{height: '80px', width: '80px', backgroundColor: 'wheat'}}/>
+                            <Box sx={{height: '80px', width: '80px'}}>
+                                <Image src={TEAM_URL(twoTeamPerformance.red_teamname)} width={80} height={80} alt={twoTeamPerformance.red_teamname} />
+                            </Box>
                         </Grid>
                         <Grid item xs={4} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                            <Box sx={{display: 'flex'}}>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
+                            <Box sx={{display: 'flex', alignItems: 'center'}}>
+                                <Typography variant="body1">Bans: </Typography>
+                                <Image src={CHAMPION_URL(twoTeamPerformance.red_ban1)} width={30} height={30} alt={twoTeamPerformance.red_ban1} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.red_ban2)} width={30} height={30} alt={twoTeamPerformance.red_ban2} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.red_ban3)} width={30} height={30} alt={twoTeamPerformance.red_ban3} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.red_ban4)} width={30} height={30} alt={twoTeamPerformance.red_ban4} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.red_ban5)} width={30} height={30} alt={twoTeamPerformance.red_ban5} />
                             </Box>
-                            <Typography variant="body1">KDA: 10/10/10</Typography>
-                            <Typography variant="body1">KDA: 10/10/10</Typography>
+                            <Box sx={{display: 'flex', alignItems: 'center', marginTop: '2px'}}>
+                                <Typography variant="body1">Picks: </Typography>
+                                {redPicks.map((pick) => (<Image key={pick} src={CHAMPION_URL(pick)} width={30} height={30} alt={pick} />))}
+                            </Box>
+                            <Typography variant="caption" sx={{display: 'flex', alignItems: 'center', marginTop: '2px'}}>
+                                KDA: 10/10/10
+                                Gold: 10000
+                                Dragons: 3
+                            </Typography>
+                            <Typography variant="caption" sx={{display: 'flex', alignItems: 'center'}}>
+                                KDA: 10/10/10
+                                Gold: 10000
+                                Dragons: 3
+                            </Typography>
                         </Grid>
                         <Grid item xs={1} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <Typography variant="h6">Win</Typography>
+                            <Typography variant="h6">{twoTeamPerformance.red_result === 1 ? 'Win' : 'Lose'}</Typography>
                         </Grid>
                         <Grid item xs={1} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <Typography variant="h6">Lose</Typography>
+                            <Typography variant="h6">{twoTeamPerformance.blue_result === 1 ? 'Win' : 'Lose'}</Typography>
                         </Grid>
                         <Grid item xs={4} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                            <Box sx={{display: 'flex'}}>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
-                                <Box sx={{height: '35px', width: '35px', backgroundColor: 'wheat', marginLeft: '2.5px', marginRight: '2.5px'}}/>
+                            <Box sx={{display: 'flex', alignItems: 'center'}}>
+                                <Typography variant="body1">Bans: </Typography>
+                                <Image src={CHAMPION_URL(twoTeamPerformance.blue_ban1)} width={30} height={30} alt={twoTeamPerformance.blue_ban1} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.blue_ban2)} width={30} height={30} alt={twoTeamPerformance.blue_ban2} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.blue_ban3)} width={30} height={30} alt={twoTeamPerformance.blue_ban3} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.blue_ban4)} width={30} height={30} alt={twoTeamPerformance.blue_ban4} />
+                                <Image src={CHAMPION_URL(twoTeamPerformance.blue_ban5)} width={30} height={30} alt={twoTeamPerformance.blue_ban5} />
                             </Box>
-                            <Typography variant="body1">KDA: 10/10/10</Typography>
-                            <Typography variant="body1">KDA: 10/10/10</Typography>
+                            <Box sx={{display: 'flex', alignItems: 'center', marginTop: '2px'}}>
+                                <Typography variant="body1">Picks: </Typography>
+                                {bluePicks.map((pick) => (<Image key={pick} src={CHAMPION_URL(pick)} width={30} height={30} alt={pick} />))}
+                            </Box>
+                            <Typography variant="caption" sx={{display: 'flex', alignItems: 'center', marginTop: '2px'}}>
+                                KDA: 10/10/10
+                                Gold: 10000
+                                Dragons: 3
+                            </Typography>
+                            <Typography variant="caption" sx={{display: 'flex', alignItems: 'center'}}>
+                                KDA: 10/10/10
+                                Gold: 10000
+                                Dragons: 3
+                            </Typography>
                         </Grid>
                         <Grid item xs={1} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <Box sx={{height: '80px', width: '80px', backgroundColor: 'wheat'}}/>
+                            <Box sx={{height: '80px', width: '80px'}}>
+                                <Image src={TEAM_URL(twoTeamPerformance.blue_teamname)} width={80} height={80} alt={twoTeamPerformance.blue_teamname} />
+                            </Box>
                         </Grid>
                     </Grid>
-                    <Typography variant="body2"> 01/01 </Typography>
+                    <Typography variant="body2"> {twoTeamPerformance.date} </Typography>
                 </ListItemButton>
             </ListItem> 
         )
@@ -144,12 +208,11 @@ const Team = () => {
                                 </Box>
                                 <Divider sx={{width: '100%'}}/>
                                 <List>
-                                    <TeamMatch />
-                                    <TeamMatch />
-                                    <TeamMatch />
-                                    <TeamMatch />
+                                    {matches.map((match) => (
+                                        <TeamMatch key={match.MatchID} {...match} />
+                                    ))}
                                 </List>
-                                <Pagination count={5} />
+                                <Pagination count={totalPages} page={page} onChange={(event, value) => setPage(value)}/>
                             </Paper>
                         </Grid>
                     </Grid>

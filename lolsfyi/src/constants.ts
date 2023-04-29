@@ -1,4 +1,4 @@
-export const PLACEHOLDER_PLAYER = 'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221';
+export const PLACEHOLDER_PLAYER = 'https://www.factor.gg/_next/image?url=https%3A%2F%2Ffactorassets.global.ssl.fastly.net%2Fplayer-headshots%2Fdefault.png&w=128&q=100';
 export const PLACEHOLDER_TEAM = 'https://logos-world.net/wp-content/uploads/2021/09/LoL-Esports-Emblem.png';
 export const PLACEHOLDER_CHAMPION = "https://cdn.mobalytics.gg/assets/lol/images/dd/champions/icons/monkeyking.png";
 
@@ -19,18 +19,20 @@ export const TEAM_LOGOS = new Map([
     ['lgdgaming', 'https://am-a.akamaihd.net/image?resize=140:&f=http%3A%2F%2Fstatic.lolesports.com%2Fteams%2FLGD-FullonDark-1.png'],
     ['funplusphoenix', 'https://am-a.akamaihd.net/image?resize=140:&f=http%3A%2F%2Fstatic.lolesports.com%2Fteams%2F1627457887494_7_720.png'],
     ['invictusgaming', 'https://am-a.akamaihd.net/image?resize=140:&f=http%3A%2F%2Fstatic.lolesports.com%2Fteams%2F1634762917340_300px-Invictus_Gaming_logo.png'],
-    ['victoryfive', 'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/d/dd/Victory_Fivelogo_profile.png/revision/latest/scale-to-width-down/220?cb=20221110075800']
+    ['victoryfive', 'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/d/dd/Victory_Fivelogo_profile.png/revision/latest/scale-to-width-down/220?cb=20221110075800'],
+    ['bilibiligaming', 'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/f/fb/Bilibili_Gaminglogo_profile.png/revision/latest?cb=20211201134817'],
   ]);
   
 
 export const CHAMPION_URL = (name : string) => {
   if (name === 'Wukong') name = 'monkeyking';
-  name = name.toLowerCase().replace(/[.,' ]/g,"");
+  name = name.toLowerCase().replace(/[.,' ]/g,"").trim();
   return `https://cdn.mobalytics.gg/assets/lol/images/dd/champions/icons/${name}.png`;
 };
 
 export const TEAM_URL = (name : string) => {
-  name = name.toLowerCase().replace(/[.,' ]/g,"");
+  name = name.toLowerCase().replaceAll(' ',"").trim();
+  console.log(name);
   if (TEAM_LOGOS.has(name)) return TEAM_LOGOS.get(name);
   return PLACEHOLDER_TEAM;
 }

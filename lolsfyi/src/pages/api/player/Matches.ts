@@ -25,7 +25,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       SUM(CASE WHEN M.Win_side = 'Blue' THEN 1 ELSE 0 END)/2 AS teamBlueScore,
       NULL AS teamRedLogo,
       NULL AS teamBlueLogo,
-      DATE_FORMAT(M.Match_date, '%Y-%m-%d') AS date
+      DATE_FORMAT(M.Match_date, '%Y-%m-%d') AS date,
+      (SELECT CEIL(COUNT(DISTINCT MatchID) / ?)
+        FROM (
+          SELECT M.MatchID
+          FROM PlayerPerformance F
+          JOIN Matches M ON M.MatchID = F.MatchID
+          WHERE F.Playername = ?
+          AND (? IS NULL OR M.League = ?)
+          AND (? IS NULL OR YEAR(M.Match_date) = ?)
+        ) AS SubQuery) AS maxPagination
       FROM (
         SELECT *                        
         FROM PlayerPerformance
@@ -40,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       LIMIT ? OFFSET ?;
     `;
 
-    const results = await db.query(sqlQuery, [name, league, league, year, year, pageSize, offset]);
+    const results = await db.query(sqlQuery, [pageSize, name, league, league, year, year, name, league, league, year, year, pageSize, offset]);
 
     // Close the database connection
     await db.end();

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../lib/db'; // Import your serverless-mysql instance
 
-const pageSize = 5; // Set the desired page size
+const pageSize = 4; // Set the desired page size
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Extract the teamname query parameter
@@ -43,7 +43,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             ORDER BY PP.Position
             SEPARATOR ','
         ) AS blue_champions,
-      DATE_FORMAT(M.Match_date, '%Y-%m-%d') AS date
+      DATE_FORMAT(M.Match_date, '%Y-%m-%d') AS date,
+      (SELECT CEIL(COUNT(DISTINCT MatchID) / ?)
+        FROM (
+          SELECT MatchID
+          FROM TeamPerformance
+          WHERE TeamPerformance.teamname = ?
+        ) AS SubQuery) AS maxPagination
       FROM 
         (SELECT MatchID
           FROM TeamPerformance
@@ -56,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       LIMIT ? OFFSET ?;
     `;
 
-    const results = await db.query(sqlQuery, [teamname, pageSize, offset]);
+    const results = await db.query(sqlQuery, [pageSize, teamname, teamname, pageSize, offset]);
 
     // Close the database connection
     await db.end();

@@ -3,7 +3,7 @@ import db from '../../lib/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Extract query parameters
-  const { league, page } = req.query;
+  const { league, page=1 } = req.query;
 
   // Validate the query parameters
   if (!league || !page) {
@@ -17,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
 
     // Fetch the recent matches and join with TeamPerformance table
-    
     
     // SELECT M.MatchID, T.TeamID, T.Teamname, T.Side, M.Win_side, M.Match_date
     const sqlQuery = `

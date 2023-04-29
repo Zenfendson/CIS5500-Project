@@ -8,57 +8,8 @@ import scss from "./Matches.module.scss";
 import MatchCard from "@/components/MatchCard/MatchCard";
 import { useRouter } from "next/router";
 
-const mockMatches : MatchProps[] = [
-    {
-        matchid: 1,
-        teamRed: "RNG",
-        teamBlue: "EDG",
-        teamRedScore: 1,
-        teamBlueScore: 0,
-        teamRedLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
-        teamBlueLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/5/56/EDward_Gaminglogo_square.png/revision/latest/scale-to-width-down/1920?cb=20211024133123",
-        date: "2021-10-10",
-    }, {
-        matchid: 2,
-        teamRed: "RNG",
-        teamBlue: "EDG",
-        teamRedScore: 1,
-        teamBlueScore: 0,
-        teamRedLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
-        teamBlueLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/5/56/EDward_Gaminglogo_square.png/revision/latest/scale-to-width-down/1920?cb=20211024133123",
-        date: "2021-10-10",
-    }, {
-        matchid: 3,
-        teamRed: "RNG",
-        teamBlue: "EDG",
-        teamRedScore: 1,
-        teamBlueScore: 0,
-        teamRedLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
-        teamBlueLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/5/56/EDward_Gaminglogo_square.png/revision/latest/scale-to-width-down/1920?cb=20211024133123",
-        date: "2021-10-10",
-    }, {
-        matchid: 4,
-        teamRed: "RNG",
-        teamBlue: "EDG",
-        teamRedScore: 1,
-        teamBlueScore: 0,
-        teamRedLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
-        teamBlueLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/5/56/EDward_Gaminglogo_square.png/revision/latest/scale-to-width-down/1920?cb=20211024133123",
-        date: "2021-10-10",
-    }, {
-        matchid: 5,
-        teamRed: "RNG",
-        teamBlue: "EDG",
-        teamRedScore: 1,
-        teamBlueScore: 0,
-        teamRedLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222",
-        teamBlueLogo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/5/56/EDward_Gaminglogo_square.png/revision/latest/scale-to-width-down/1920?cb=20211024133123",
-        date: "2021-10-10",
-    }, 
-];
-
 export type MatchProps = {
-    matchid: number;
+    MatchID: number;
     teamRed: string;
     teamBlue: string;
     teamRedScore: number;
@@ -69,7 +20,6 @@ export type MatchProps = {
 };
 
 const Matches = () => {
-
     const [league, setLeague] = React.useState<string>('LPL');
     const [leagues, setLeagues] = React.useState<Object[]>([]);
     const [matches, setMatches] = React.useState<MatchProps[]>([]);
@@ -107,11 +57,11 @@ const Matches = () => {
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5 }}>
                     <InputLabel id="match-league-select">Leagues</InputLabel>
                     <Select
-                    labelId="match-league-select"
-                    id="match-league-select"
-                    value={league}
-                    onChange={handleChangeLeague}
-                    label="Leagues"
+                        labelId="match-league-select"
+                        id="match-league-select"
+                        value={league}
+                        onChange={handleChangeLeague}
+                        label="Leagues"
                     >
                         {
                             leagues.map((league) => <MenuItem value={league?.League}>{league?.League}</MenuItem>)

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import { Performance } from "@/pages/player/Player";
 
@@ -139,7 +139,10 @@ const mockedMatchPerformanceBlue = [
     },
 ];
 
-const PlayerMatchCard = () => {
+const PlayerMatchCard = ( performances : Performance[] ) => {
+
+    const RedPerformances : Performance[] = performances.slice(0, 5);
+    const BluePerformances : Performance[] = performances.slice(5, 10);
 
     const PlayerPerformanceRed = (performance : Performance) => {
         return (
@@ -195,14 +198,14 @@ const PlayerMatchCard = () => {
         <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "20px 20px 20px 20px" }}>
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start"}}>
                 <Typography variant="h6" sx={{marginBottom: "10px", paddingLeft: "10px"}}>Red Team</Typography>
-                {mockedMatchPerformanceRed.map((performance) => (
+                {RedPerformances.map((performance) => (
                     <PlayerPerformanceRed key={performance.id} {...performance} />
                 ))}
             </Box>
             
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "flex-end"}}>
                 <Typography variant="h6" sx={{marginBottom: "10px"}}>Blue Team</Typography>
-                {mockedMatchPerformanceBlue.map((performance) => (
+                {BluePerformances.map((performance) => (
                     <PlayerPerformanceBlue key={performance.id} {...performance} />
                 ))}
             </Box>

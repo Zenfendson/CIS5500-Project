@@ -1,27 +1,32 @@
-import { Box, Divider, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Typography, TextField, Autocomplete } from "@mui/material";
+import { Box, Divider, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Typography, TextField, Autocomplete, Pagination, List } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import scss from "./Player.module.scss";
 import PlayerCard from "@/components/PlayerCard/PlayerCard";
-import PlayerMatches from "@/components/PlayerMatches/PlayerMatches";
+import PlayerMatch from "@/components/PlayerMatch/PlayerMatch";
 import PlayerMatchCard from "@/components/PlayerMatchCard/PlayerMatchCard";
 import { useRouter } from "next/router";
+import { MatchProps } from "../matches/Matches";
 
-const mockPlayerProps : PlayerProps = {
-    name: "Uzi",
-    realname: "Jian Zi-Hao",
-    team: "RNG",
-    avatar: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221",
-    league: "LPL",
-    position: "ADC",
-}
-
-export type PlayerProps = {
+export type PlayerInfo = {
     name: string;
-    realname: string;
     team: string;
     avatar: string;
     league: string;
     position: string;
+};
+
+export type PlayerStats = {
+    winrate: number;
+    numberofwins: number;
+    numberofloses: number;
+    kills: number;
+    deaths: number;
+    assists: number;
+    KDA: number;
+    pentakillsrate: number;
+    dpm: number;
+    gpm: number;
+    cspm: number;
 };
 
 export type Performance = {
@@ -39,9 +44,20 @@ export type Performance = {
 }
 
 const Player = () => {
-    const [player, setPlayer] = React.useState<string | null>(null);
+    const [leagues, setLeagues] = React.useState<Object[]>([]);
+    const [years, setYears] = React.useState<Object[]>([]);
     const [league, setLeague] = React.useState<string | null>(null);
     const [year, setYear] = React.useState<string | null>(null);
+    const [players, setPlayers] = React.useState<Object[]>([]);
+    const [player, setPlayer] = React.useState<string | null>(null);
+    const [isShow, setIsShow] = React.useState<boolean>(false);
+    const [playerInfo, setPlayerInfo] = React.useState<PlayerInfo | null>(null);
+    const [playerStats, setPlayerStats] = React.useState<PlayerStats | null>(null);
+    const [playerMatches, setPlayerMatches] = React.useState<MatchProps[]>([]);
+    const [page, setPage] = React.useState<number>(1);
+    const [pagenum, setPagenum] = React.useState<number>(1);
+
+    const router = useRouter();
 
     const handleChangeLeague = (event: SelectChangeEvent) => {
         setLeague(event.target.value);
@@ -51,26 +67,79 @@ const Player = () => {
         setYear(event.target.value);
     };
 
-    const router = useRouter();
+    const handleChangeName = (event : any) => {
+        if (event.type === 'click') {
+            router.push(`/player?name=${event.target.textContent.toLowerCase()}`);
+        }
+    };
+
+    const handleSubmitName = (event : any) => {
+        if (event.key === 'Enter') {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getPlayerByName?name=${event.target.value}`)
+                .then((response) => response.json())
+                .then((json) => setPlayers(json));
+        }
+    };
 
     useEffect(() => {
         const { name } = router.query;
-        setPlayer(name as string);
+        if (name) {
+            setPlayer(name as string);
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerinfo?name=${name}`)
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.length > 0) {
+                        setIsShow(true);
+                    }
+                });
+        }
     }, [router.query]);
+
+    useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerinfo?name=${player}`)  
+            .then((response) => response.json())
+            .then((json) => setPlayerInfo(json[0]));
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerstats?name=${player}`)  
+            .then((response) => response.json())
+            .then((json) => setPlayerStats(json[0]));
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}`)  
+            .then((response) => response.json())
+            .then((json) => setPlayerMatches(json));
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/yearoptions?name=${player}`)
+            .then((response) => response.json())
+            .then((json) => setYears(json.map((years : Object) => years.year)));
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/leagueoptions?name=${player}`)
+            .then((response) => response.json())
+            .then((json) => setLeagues(json.map((leagues : Object) => leagues.league)));
+    }, [isShow]);
+
+    useEffect(() => {
+        if (league && year) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&league=${league}&year=${year}`)  
+            .then((response) => response.json())
+            .then((json) => setPlayerMatches(json));
+        } else if (league) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&league=${league}`)  
+            .then((response) => response.json())
+            .then((json) => setPlayerMatches(json));
+        } else if (year) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&year=${year}`)  
+            .then((response) => response.json())
+            .then((json) => setPlayerMatches(json));
+        }
+    }, [league, year]);
 
     const ComboBox = () => {
         return (
             <Autocomplete
             disablePortal
             id="player-auto-complete"
-            options={['Uzi', 'Faker']}
+            options={players.map((player) => player?.Name)}
             sx={{ width: 600 }}
-            renderInput={(params) => <TextField {...params} label="Player" />}
-            value={player}
-            onChange={(event: any, player: string | null) => {
-                setPlayer(player);
-                router.push(`/player?name=${player}`);
-            }}
+            renderInput={(params) => <TextField {...params} label="Search a Player" />}
+            onClose={() => setPlayers([])}
+            onInputChange={handleChangeName}
+            onKeyDown={handleSubmitName}
             />
         );
     }
@@ -79,12 +148,11 @@ const Player = () => {
         <Box className={scss.flex_wrapper} marginTop={5}>
             <Grid container spacing={2} sx={{width: '80vw'}}>
                 <Grid item xs={12} sx={{display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center", marginBottom: "5vh"}}>
-                    <Typography variant="h5" marginBottom={5}>Search a Player</Typography>
                     <ComboBox />
                 </Grid>
-                {player && (<>
+                {isShow && (<>
                 <Grid item xs={12}>
-                    <PlayerCard {...mockPlayerProps} />
+                    <PlayerCard playerProps={{ playerInfo, playerStats }} />
                 </Grid>
                 <Grid container sx={{marginTop: '5vh'}}>
                     <Grid item xs={12}>
@@ -102,8 +170,8 @@ const Player = () => {
                                         onChange={handleChangeLeague}
                                         label="Leagues"
                                         >
-                                        <MenuItem value="LPL">LPL</MenuItem>
-                                        <MenuItem value="LDL">LDL</MenuItem>
+                                        <MenuItem value={null}>All</MenuItem>
+                                        {leagues.map((league) => <MenuItem key={league} value={league}>{league}</MenuItem>)}
                                         </Select>
                                     </FormControl>
                                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120}}>
@@ -114,8 +182,8 @@ const Player = () => {
                                         onChange={handleChangeYear}
                                         label="Year"
                                         >
-                                        <MenuItem value="2017">2017</MenuItem>
-                                        <MenuItem value="2018">2018</MenuItem>
+                                        <MenuItem value={null}>All</MenuItem>
+                                        {years.map((year) => <MenuItem key={year} value={year}>{year}</MenuItem>)}
                                         </Select>
                                     </FormControl>
                                 </Grid>
@@ -123,7 +191,16 @@ const Player = () => {
                             <Divider sx={{width: '100%'}} />
                             <Grid overflow={'clip'} container>
                                 <Grid xs={3.5} height={600} item>
-                                    <PlayerMatches name={mockPlayerProps.name} league={league} year={year} />
+                                    <Grid container className={scss.wrapper}>
+                                        <Grid container height={550} overflow={'scroll'}>
+                                            <List className={scss.list}>
+                                                {playerMatches.map((match) => <PlayerMatch key={match.MatchID} {...match} />)}
+                                            </List>
+                                        </Grid>
+                                        <Grid container sx={{alignItems: 'center', justifyContent: 'center', marginBottom: '10px', height: '40px'}}>
+                                            <Pagination count={pagenum} page={page} onChange={(event, value) => setPage(value)} />
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                                 <Grid xs={8.5} height={600} item>
                                     <PlayerMatchCard />

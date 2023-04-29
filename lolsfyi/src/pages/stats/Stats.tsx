@@ -1,5 +1,5 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Autocomplete } from "@mui/material";
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect } from "react";
 import scss from "./Stats.module.scss";
 
@@ -12,10 +12,10 @@ const teamOrders = [
 ]
 
 const playerCols: GridColDef[] = [
+    { field: 'id', headerName: 'Player ID', width: 150 },
     { field: 'teamname', headerName: 'Team', width: 150 },
     { field: 'league', headerName: 'League', width: 150 },
     { field: 'position', headerName: 'Position', width: 150 },
-    { field: 'playername', headerName: 'Player Name', width: 150 },
     { field: 'winrate', headerName: 'Win Rate', width: 150 },
     { field: 'numberofwin', headerName: 'Wins', width: 150 },
     { field: 'numberofloses', headerName: 'Loses', width: 150 },
@@ -50,6 +50,7 @@ const Stats = () => {
     const [orderby, setOrderBy] = React.useState<string | null>(null);
     const [order, setOrder] = React.useState<string | null>(null);
     const [name, setName] = React.useState<string | null>(null);
+    const [input, setInput] = React.useState<string | null>(null);
     const [leagues, setLeagues] = React.useState<Object[]>([]);
     const [players, setPlayers] = React.useState<Object[]>([]);
     const [rows, setRows] = React.useState<Object[]>([]);
@@ -71,13 +72,18 @@ const Stats = () => {
     };
 
     const handleChangeName = (event : any) => {
-        setName(event.target.value);
-        setPlayers([]);
+        if (event.type === 'click') {
+            setName(event.target.textContent.toLowerCase());
+            setPlayers([]); 
+        } else {
+            console.log(event.target.value);
+            setInput(event.target.value);
+        }
     };
 
     const handleSubmitName = (event : any) => {
         if (event.key === 'Enter') {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getPlayerByName?name=${name}`)
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getPlayerByName?name=${input}`)
                 .then((response) => response.json())
                 .then((json) => setPlayers(json));
         }
@@ -92,15 +98,35 @@ const Stats = () => {
     useEffect(() => {
         let url = `${process.env.NEXT_PUBLIC_API_URL}/api`;
         url += scope === 'Player' ? '/getPlayerList' : '/getTeamList';
-        url += league ? `?league=${league}` : '';
-        url += orderby ? `&orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
-        url += order ? `&order=${order === 'Ascending' ? '1' : '0'}` : '';
+        let prev = false;
+        if (league) {
+            url += league ? `?league=${league}` : '';
+            prev = true;
+        }
+        if (prev) {
+            url += orderby ? `&orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
+        } else if (orderby) {
+            url += orderby ? `?orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
+            prev = true;
+        }
+        if (prev) {
+            url += order ? `&order=${order === 'Ascending' ? '1' : '0'}` : '';
+        } else if (order) {
+            url += order ? `?order=${order === 'Ascending' ? '1' : '0'}` : '';
+            prev = true;
+        }
+        if (prev) {
+            url += name ? `&name=${name}` : '';
+        } else if (name) {
+            url += name ? `?name=${name}` : '';
+            prev = true;
+        }
 
-        console.log(url);
         fetch(url)
             .then((response) => response.json())
-            .then((json) => console.log(json));
-    });
+            .then((json) => setRows(json));
+
+    }, [scope, league, orderby, order, name]);
     
     return (
         <Box className={scss.wrapper}>
@@ -130,6 +156,7 @@ const Stats = () => {
                             onChange={handleChangeLeague}
                             label="League"
                         >
+                        <MenuItem value={'Default'}>Default</MenuItem>
                         {leagues.map((league) => <MenuItem value={league?.League}>{league?.League}</MenuItem>)}
                         </Select>
                     </FormControl>
@@ -144,6 +171,7 @@ const Stats = () => {
                             onChange={handleChangeOrderBy}
                             label="Patch"
                         >
+                        <MenuItem value={'Default'}>Default</MenuItem>
                         {scope === 'Player' ? playerOrders.map((order) => <MenuItem value={order}>{order}</MenuItem>) : teamOrders.map((order) => <MenuItem value={order}>{order}</MenuItem>)}
                         </Select>
                     </FormControl>
@@ -158,6 +186,7 @@ const Stats = () => {
                             onChange={handleChangeOrder}
                             label="Patch"
                         >
+                        <MenuItem value={'Default'}>Default</MenuItem>
                         <MenuItem value="Ascending">Ascending</MenuItem>
                         <MenuItem value="Descending">Descending</MenuItem>
                         </Select>
@@ -179,10 +208,12 @@ const Stats = () => {
                 <DataGrid
                     rows={rows}
                     columns={scope === 'Player' ? playerCols : teamCols}
-                    paginationModel={{ page: 0, pageSize: 20 }}
+                    paginationModel={{ page: 0, pageSize: 10 }}
                     // checkboxSelection
                     disableSelectionOnClick
                     // experimentalFeatures={{ newEditingApi: true }}
+                    loading={rows.length === 0}
+                    pagination
                 />
             </Box>  
         </Box>

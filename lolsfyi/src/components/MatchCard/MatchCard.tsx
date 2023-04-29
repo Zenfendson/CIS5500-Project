@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import scss from "./MatchCard.module.scss";
 import { MatchProps } from "@/pages/matches/Matches";
+import { PLACEHOLDER_TEAM } from "@/constants";
 
 
 const MatchCard = (matchProps : MatchProps) => {
@@ -11,7 +12,7 @@ const MatchCard = (matchProps : MatchProps) => {
             <Paper className={scss.card}>
                 <Grid container xs={12}>
                     <Grid item xs={2} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        <Image className={scss.logo} src={matchProps.teamRedLogo || ''} width={50} height={50} alt={matchProps.teamRed} />
+                        <Image className={scss.logo} src={matchProps.teamRedLogo || PLACEHOLDER_TEAM} width={50} height={50} alt={matchProps.teamRed} />
                     </Grid>
                     <Grid item xs={3} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                         <Typography variant="body2"> {matchProps.teamRed} </Typography>
@@ -23,7 +24,7 @@ const MatchCard = (matchProps : MatchProps) => {
                         <Typography variant="body2"> {matchProps.teamBlue} </Typography>
                     </Grid>
                     <Grid item xs={2} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        <Image className={scss.logo} src={matchProps.teamBlueLogo || ''} width={50} height={50} alt={matchProps.teamBlue} />
+                        <Image className={scss.logo} src={matchProps.teamBlueLogo || PLACEHOLDER_TEAM} width={50} height={50} alt={matchProps.teamBlue} />
                     </Grid>
                 </Grid>
             </Paper>

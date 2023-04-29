@@ -1,0 +1,3 @@
+export const PLACEHOLDER_PLAYER = 'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/89/BLG_Uzi_2022_Split_1.png/revision/latest?cb=20220109012221';
+export const PLACEHOLDER_TEAM = 'https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/e/eb/Royal_Never_Give_Uplogo_square.png/revision/latest/scale-to-width-down/1920?cb=20210521114222';
+export const PLACEHOLDER_CHAMPION = "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/4/49/Kai%27SaSquare.png/";

@@ -36,7 +36,7 @@ const Matches = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getAllLeagueNames`)
               .then((response) => response.json())
               .then((json) => setLeagues(json));
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recentMatches?league=${league}&page=${page}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recentmatches?league=${league}&page=${page}`)
               .then((response) => response.json())
               .then((json) => setMatches(json));
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/maxpagehome?league=${league}`)
@@ -45,7 +45,7 @@ const Matches = () => {
     }, []);
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recentMatches?league=${league}&page=${page}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recentmatches?league=${league}&page=${page}`)
               .then((response) => response.json())
               .then((json) => setMatches(json));
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/maxpagehome?league=${league}`)

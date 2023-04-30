@@ -44,6 +44,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             SEPARATOR ','
         ) AS blue_champions,
       DATE_FORMAT(M.Match_date, '%Y-%m-%d') AS date,
+      MAX(CASE WHEN TP.Side = 'Red' THEN TP.kills END) AS red_kills,
+      MAX(CASE WHEN TP.Side = 'Red' THEN TP.deaths END) AS red_deaths,
+      MAX(CASE WHEN TP.Side = 'Red' THEN TP.assists END) AS red_assists,
+      MAX(CASE WHEN TP.Side = 'Red' THEN TP.totalgold END) AS red_totalgold,
+      MAX(CASE WHEN TP.Side = 'Red' THEN TP.dragons END) AS red_dragons,
+      MAX(CASE WHEN TP.Side = 'Blue' THEN TP.kills END) AS blue_kills,
+      MAX(CASE WHEN TP.Side = 'Blue' THEN TP.deaths END) AS blue_deaths,
+      MAX(CASE WHEN TP.Side = 'Blue' THEN TP.assists END) AS blue_assists,
+      MAX(CASE WHEN TP.Side = 'Blue' THEN TP.totalgold END) AS blue_totalgold,
+      MAX(CASE WHEN TP.Side = 'Blue' THEN TP.dragons END) AS blue_dragons,
       (SELECT CEIL(COUNT(DISTINCT MatchID) / ?)
         FROM (
           SELECT MatchID

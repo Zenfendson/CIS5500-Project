@@ -28,6 +28,16 @@ export type TwoTeamPerformance = {
     red_champions: string;
     blue_champions: string;
     date: string;
+    red_kills: string;
+    red_deaths: string;
+    red_assists: string;
+    red_totalgold: string;
+    red_dragons: string;
+    blue_kills: string;
+    blue_deaths: string;
+    blue_assists: string;
+    blue_totalgold: string;
+    blue_dragons: string;
 }
 
 const Team = () => {
@@ -58,7 +68,7 @@ const Team = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/members?teamname=${team}`)
                 .then((response) => response.json())
                 .then((json) => setMembers(json.members));
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/recentMatches?teamname=${team}&page=${page}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/recentmatches?teamname=${team}&page=${page}`)
                 .then((response) => response.json())
                 .then((json) => {
                     console.log(json)
@@ -126,14 +136,12 @@ const Team = () => {
                                 {redPicks.map((pick) => (<Image key={pick} src={CHAMPION_URL(pick)} width={30} height={30} alt={pick} />))}
                             </Box>
                             <Typography variant="caption" sx={{display: 'flex', alignItems: 'center', marginTop: '2px'}}>
-                                KDA: 10/10/10
-                                Gold: 10000
-                                Dragons: 3
+                                KDA: {twoTeamPerformance.red_kills} / {twoTeamPerformance.red_deaths} / {twoTeamPerformance.red_assists}
+                                
                             </Typography>
                             <Typography variant="caption" sx={{display: 'flex', alignItems: 'center'}}>
-                                KDA: 10/10/10
-                                Gold: 10000
-                                Dragons: 3
+                                Gold: {twoTeamPerformance.red_totalgold} {}
+                                Dragons: {twoTeamPerformance.red_dragons}
                             </Typography>
                         </Grid>
                         <Grid item xs={1} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -156,14 +164,11 @@ const Team = () => {
                                 {bluePicks.map((pick) => (<Image key={pick} src={CHAMPION_URL(pick)} width={30} height={30} alt={pick} />))}
                             </Box>
                             <Typography variant="caption" sx={{display: 'flex', alignItems: 'center', marginTop: '2px'}}>
-                                KDA: 10/10/10
-                                Gold: 10000
-                                Dragons: 3
+                                KDA: {twoTeamPerformance.blue_kills}/{twoTeamPerformance.blue_deaths}/{twoTeamPerformance.blue_assists}
                             </Typography>
                             <Typography variant="caption" sx={{display: 'flex', alignItems: 'center'}}>
-                                KDA: 10/10/10
-                                Gold: 10000
-                                Dragons: 3
+                                Gold: {twoTeamPerformance.blue_totalgold} {}
+                                Dragons: {twoTeamPerformance.blue_dragons}
                             </Typography>
                         </Grid>
                         <Grid item xs={1} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

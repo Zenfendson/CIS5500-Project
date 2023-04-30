@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       dragons,barons,
       firstblood, firsttower, firstdragon,
       damagetochampions,totalgold,visionscore,
-      M.Match_date AS date,
+      DATE_FORMAT(M.Match_date, '%Y-%m-%d') AS date,
       M.GameLength AS gamelength,
       M.Win_side AS winside
       FROM

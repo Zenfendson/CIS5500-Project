@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       SUM(CASE WHEN M.Win_side = 'Blue' THEN 1 ELSE 0 END)/2 AS teamBlueScore,
       NULL AS teamRedLogo,
       NULL AS teamBlueLogo,
-      M.Match_date AS date
+      DATE_FORMAT(M.Match_date, '%Y-%m-%d') AS date
       FROM 
         (SELECT *
         FROM Matches

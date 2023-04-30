@@ -63,7 +63,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const offset = (pageNumber - 1) * pageSize;
         if (!order){
             try {
-                const sqlQuery = `SELECT Teamname as teamname, playername as id,League as league, Position as position, wr.win_rate as winrate, wr.Numberofwins as numberofwin, wr.NumberofLoses as numberofloses FROM Players join (${winrateq}) as wr on wr.playername = name ${whereClause ? `WHERE ${whereClause}` : ''} LIMIT ${offset}, ${pageSize}`;
+                const sqlQuery = `SELECT Teamname as teamname, 
+                playername as id,
+                League as league, 
+                Position as position, 
+                wr.win_rate as winrate, 
+                wr.Numberofwins as numberofwin, 
+                wr.NumberofLoses as numberofloses 
+                FROM Players join (${winrateq}) as wr on wr.playername = name 
+                ${whereClause ? `WHERE ${whereClause}` : ''}`; 
+                // LIMIT ${pageSize} OFFSET ${offset}`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection
                 await db.end();
@@ -74,9 +83,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 res.status(500).json({ error: 'Error fetching data from the database' });
               }
         }
+
         if (order) {
             try {
-                const sqlQuery = `SELECT * FROM (SELECT Teamname as teamname,  playername as id,League as league, Position as position, wr.win_rate as winrate, wr.Numberofwins as numberofwin, wr.NumberofLoses as numberofloses FROM Players join (${winrateq}) as wr on wr.playername = name ${whereClause ? `WHERE ${whereClause}` : ''}) as ps Order by ps.${order} ${(asc == '1') ? ` asc` : ' desc'} LIMIT ${offset}, ${pageSize}`;
+                const sqlQuery = `SELECT * FROM (SELECT Teamname as teamname,  
+                  playername as id,League as league, Position as position, 
+                  wr.win_rate as winrate, 
+                  wr.Numberofwins as numberofwin, 
+                  wr.NumberofLoses as numberofloses 
+                  FROM Players join (${winrateq}) as wr on wr.playername = name 
+                  ${whereClause ? `WHERE ${whereClause}` : ''}) as ps 
+                  Order by ps.${order} ${(asc == '1') ? ` asc` : ' desc'}`;
+                  // LIMIT ${pageSize} OFFSET ${offset}`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection
                 await db.end();
@@ -87,7 +105,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 res.status(500).json({ error: 'Error fetching data from the database' });
               }
         }
-      //}
   } catch (error) {
     res.status(500).json({ error: 'Error fetching data from database' });
   }

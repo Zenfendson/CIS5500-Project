@@ -54,6 +54,11 @@ const Stats = () => {
     const [leagues, setLeagues] = React.useState<Object[]>([]);
     const [players, setPlayers] = React.useState<Object[]>([]);
     const [rows, setRows] = React.useState<Object[]>([]);
+    const [page, setPage] = React.useState(0);
+    const [paginationModel, setPaginationModel] = React.useState({
+        pageSize: 10,
+        page: 0,
+      });
 
     const handleChangeScope = (event: SelectChangeEvent) => {
         setScope(event.target.value);
@@ -208,12 +213,12 @@ const Stats = () => {
                 <DataGrid
                     rows={rows}
                     columns={scope === 'Player' ? playerCols : teamCols}
-                    paginationModel={{ page: 0, pageSize: 10 }}
+                    paginationModel={paginationModel}
+                    onPaginationModelChange={setPaginationModel}
                     // checkboxSelection
-                    disableSelectionOnClick
+                    // disableSelectionOnClicks
                     // experimentalFeatures={{ newEditingApi: true }}
                     loading={rows.length === 0}
-                    pagination
                 />
             </Box>  
         </Box>

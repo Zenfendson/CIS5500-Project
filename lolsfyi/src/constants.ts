@@ -32,7 +32,6 @@ export const CHAMPION_URL = (name : string) => {
 
 export const TEAM_URL = (name : string) => {
   if (name) {
-    console.log(name);
     name = name.toLowerCase().replaceAll(' ',"").trim();
     if (TEAM_LOGOS.has(name)) return TEAM_LOGOS.get(name);
   }

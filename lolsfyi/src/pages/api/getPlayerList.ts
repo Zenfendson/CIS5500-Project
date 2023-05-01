@@ -48,9 +48,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 CASE
                   WHEN COUNT(*) < 6 THEN NULL
                   ELSE CAST(SUM(result) AS FLOAT) / COUNT(*)
-                END AS win_rate,
-                sum(result) as Numberofwins,
-                count(*)-sum(result) as NumberofLoses
+                END AS winrate,
+                sum(result) as numberofwin,
+                count(*)-sum(result) as numberofloses
                from
                (select playername, Ps.Teamname, Ps.League, Ps.Position,
                 CASE WHEN pp.Side = M.Win_side THEN 1 ELSE 0 END as result

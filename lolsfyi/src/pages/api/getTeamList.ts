@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         team: team && `Name=${team}`,
     };
     const whereClause = Object.values(conditions).filter(Boolean).join(' AND ');
-    const winrateq = `select Teamid as tid, Teamname,
+    const winrateq = `select Teamid as id, Teamname,
     CASE
       WHEN COUNT(*) < 3 THEN NULL
       ELSE CAST(SUM(result) AS FLOAT) / COUNT(*)
@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!page) {
         if (!order){
             try {
-                const sqlQuery = `SELECT * FROM Team join (${winrateq}) as wr on wr.tid = teamid ${whereClause ? `WHERE ${whereClause}` : ''}`;
+                const sqlQuery = `SELECT * FROM Team join (${winrateq}) as wr on wr.id = teamid ${whereClause ? `WHERE ${whereClause}` : ''}`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection
                 await db.end();
@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         if (order) {
             try {
-                const sqlQuery = `SELECT * FROM (SELECT * FROM Team join (${winrateq}) as wr on wr.tid = teamid ${whereClause ? `WHERE ${whereClause}` : ''}) as ps Order by ps.${order} ${(asc == '1') ? ` asc` : ' desc'}`;
+                const sqlQuery = `SELECT * FROM (SELECT * FROM Team join (${winrateq}) as wr on wr.id = teamid ${whereClause ? `WHERE ${whereClause}` : ''}) as ps Order by ps.${order} ${(asc == '1') ? ` asc` : ' desc'}`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection
                 await db.end();
@@ -50,7 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const offset = (pageNumber - 1) * pageSize;
         if (!order){
             try {
-                const sqlQuery = `SELECT * FROM Team join (${winrateq}) as wr on wr.tid = Teamid ${whereClause ? `WHERE ${whereClause}` : ''} LIMIT ${offset}, ${pageSize}`;
+                const sqlQuery = `SELECT * FROM Team join (${winrateq}) as wr on wr.id = Teamid ${whereClause ? `WHERE ${whereClause}` : ''} LIMIT ${offset}, ${pageSize}`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection
                 await db.end();
@@ -63,7 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         if (order) {
             try {
-                const sqlQuery = `SELECT * FROM (SELECT * FROM Team join (${winrateq}) as wr on wr.tid = Teamid ${whereClause ? `WHERE ${whereClause}` : ''}) as ps Order by ps.${order} ${(asc == '1') ? ` asc` : ' desc'} LIMIT ${offset}, ${pageSize}`;
+                const sqlQuery = `SELECT * FROM (SELECT * FROM Team join (${winrateq}) as wr on wr.id = Teamid ${whereClause ? `WHERE ${whereClause}` : ''}) as ps Order by ps.${order} ${(asc == '1') ? ` asc` : ' desc'} LIMIT ${offset}, ${pageSize}`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection
                 await db.end();

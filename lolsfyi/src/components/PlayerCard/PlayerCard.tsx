@@ -1,19 +1,75 @@
 import { Paper, Typography, Grid } from "@mui/material";
 import Image from "next/image";
 import React from "react";
-import { PlayerInfo, PlayerStats } from "@/pages/player/Player";
+import { PlayerInfo, PlayerStats, PlayerSplits } from "@/pages/player/Player";
 import { PLACEHOLDER_PLAYER } from "@/constants";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
 interface PlayerCardProps {
     playerProps: {
       playerInfo: PlayerInfo | null;
       playerStats: PlayerStats | null;
+      playerSplits: PlayerSplits | null;
     };
   }
 
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
+const options = {
+    responsive: false,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: false,
+        text: 'Winning Rate',
+      },
+    },
+};
+
+const labels = ['2021 Spring', '2021 Summer', '2022 Spring', '2022 Summer', '2023 Spring'];
 
 const PlayerCard = ({ playerProps }: PlayerCardProps) => {
-    const { playerInfo, playerStats } = playerProps;
+    const { playerInfo, playerStats, playerSplits } = playerProps;
+    const splits = [
+        playerSplits?.win_rate_2021SPRING, 
+        playerSplits?.win_rate_2021SUMMER, 
+        playerSplits?.win_rate_2022SPRING,
+        playerSplits?.win_rate_2022SUMMER,
+        playerSplits?.win_rate_2023SPRING,
+    ]
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Winning Rate',
+                data: splits,
+                fill: false,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgba(255, 99, 132, 0.2)',
+            },
+        ],
+    };
+
   return (
     <Grid container xs={12}>
         <Grid item xs={2} sx={{paddingLeft: '1rem'}}>
@@ -88,6 +144,9 @@ const PlayerCard = ({ playerProps }: PlayerCardProps) => {
                     <Grid xs={2.4} container />
                 </Grid>
             </Paper>
+        </Grid>
+        <Grid item xs={12} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Line data={data} options={options} />
         </Grid>
     </Grid>
   );

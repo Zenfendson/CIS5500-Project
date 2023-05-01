@@ -29,6 +29,15 @@ export type PlayerStats = {
     cspm: number;
 };
 
+export type PlayerSplits = {
+    name: string;
+    win_rate_2021SPRING: number;
+    win_rate_2021SUMMER: number;
+    win_rate_2022SPRING: number;
+    win_rate_2022SUMMER: number;
+    win_rate_2023SPRING: number;
+}
+
 export type Performance = {
     id : number;
     player: string;
@@ -53,6 +62,7 @@ const Player = () => {
     const [isShow, setIsShow] = React.useState<boolean>(false);
     const [playerInfo, setPlayerInfo] = React.useState<PlayerInfo | null>(null);
     const [playerStats, setPlayerStats] = React.useState<PlayerStats | null>(null);
+    const [playerSplits, setPlayerSplits] = React.useState<PlayerSplits | null>(null);
     const [playerMatches, setPlayerMatches] = React.useState<MatchProps[]>([]);
     const [page, setPage] = React.useState<number>(1);
     const [pagenum, setPagenum] = React.useState<number>(1);
@@ -108,6 +118,9 @@ const Player = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerstats?name=${player}`)  
             .then((response) => response.json())
             .then((json) => setPlayerStats(json[0]));
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerwrbysplit?name=${player}`)
+            .then((response) => response.json())
+            .then((json) => setPlayerSplits(json[0]));
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&page=${page}`)  
             .then((response) => response.json())
             .then((json) => {
@@ -178,7 +191,7 @@ const Player = () => {
                 </Grid>
                 {isShow && (<>
                 <Grid item xs={12}>
-                    <PlayerCard playerProps={{ playerInfo, playerStats }} />
+                    <PlayerCard playerProps={{ playerInfo, playerStats, playerSplits }} />
                 </Grid>
                 <Grid container sx={{marginTop: '5vh'}}>
                     <Grid item xs={12}>

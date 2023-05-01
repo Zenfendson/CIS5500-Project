@@ -3,62 +3,62 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect } from "react";
 import scss from "./Stats.module.scss";
 
-const playerOrders = [
-    'Team', 'League', 'Position', 'Player Name', 'Win Rate', 'Wins', 'Loses',
-]
+// const playerOrders = [
+//     'Team', 'League', 'Position', 'Player Name', 'Win Rate', 'Wins', 'Loses',
+// ]
 
-const teamOrders = [
-    'Team ID', 'Name', 'League', 'Team Name', 'Win Rate',
-]
+// const teamOrders = [
+//     'Team ID', 'Name', 'League', 'Team Name', 'Win Rate',
+// ]
 
 const playerCols: GridColDef[] = [
-    { field: 'id', headerName: 'Player ID', width: 150 },
+    { field: 'id', headerName: 'Player', width: 150 },
     { field: 'teamname', headerName: 'Team', width: 150 },
     { field: 'league', headerName: 'League', width: 150 },
     { field: 'position', headerName: 'Position', width: 150 },
-    { field: 'winrate', headerName: 'Win Rate', width: 150 },
+    { field: 'winrate', headerName: 'Win Rate', width: 150, valueFormatter: (params) => `${Math.round(params.value * 10000) / 100}%` },
     { field: 'numberofwin', headerName: 'Wins', width: 150 },
     { field: 'numberofloses', headerName: 'Loses', width: 150 },
 ]
 
-const playerMap = new Map([
-    ['Team', 'teamname'],
-    ['League', 'league'],
-    ['Position', 'position'],
-    ['Player Name', 'playername'],
-    ['Win Rate', 'winrate'],
-    ['Wins', 'numberofwin'],
-    ['Loses', 'numberofloses'],
-]);
+// const playerMap = new Map([
+//     ['Team', 'teamname'],
+//     ['League', 'league'],
+//     ['Position', 'position'],
+//     ['Player Name', 'playername'],
+//     ['Win Rate', 'winrate'],
+//     ['Wins', 'numberofwin'],
+//     ['Loses', 'numberofloses'],
+// ]);
 
 const teamCols: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 150 },
     { field: 'Teamname', headerName: 'Team Name', width: 150 },
     { field: 'League', headerName: 'League', width: 150 },
-    { field: 'win_rate', headerName: 'Win Rate', width: 150 },
+    { field: 'win_rate', headerName: 'Win Rate', width: 150, valueFormatter: (params) => `${Math.round(params.value * 10000) / 100}%` },
 ]
 
-const teamMap = new Map([
-    ['Team Name', 'Teamname'],
-    ['League', 'League'],
-    ['Win Rate', 'win_rate'],
-]);
+// const teamMap = new Map([
+//     ['Team Name', 'Teamname'],
+//     ['League', 'League'],
+//     ['Win Rate', 'win_rate'],
+// ]);
 
 
 const Stats = () => {
     const [scope, setScope] = React.useState('Player');
-    const [league, setLeague] = React.useState<string | null>(null);
-    const [orderby, setOrderBy] = React.useState<string | null>(null);
-    const [order, setOrder] = React.useState<string | null>(null);
+    const [league, setLeague] = React.useState<string | null>('LPL');
+    // const [orderby, setOrderBy] = React.useState<string | null>(null);
+    // const [order, setOrder] = React.useState<string | null>(null);
     const [name, setName] = React.useState<string | null>(null);
     const [input, setInput] = React.useState<string | null>(null);
     const [leagues, setLeagues] = React.useState<Object[]>([]);
     const [players, setPlayers] = React.useState<Object[]>([]);
     const [rows, setRows] = React.useState<Object[]>([]);
-    const [page, setPage] = React.useState(0);
     const [paginationModel, setPaginationModel] = React.useState({
         pageSize: 10,
         page: 0,
-      });
+    });
 
     const handleChangeScope = (event: SelectChangeEvent) => {
         setScope(event.target.value);
@@ -68,13 +68,13 @@ const Stats = () => {
         setLeague(event.target.value);
     };
 
-    const handleChangeOrderBy = (event: SelectChangeEvent) => {
-        setOrderBy(event.target.value);
-    };
+    // const handleChangeOrderBy = (event: SelectChangeEvent) => {
+    //     setOrderBy(event.target.value);
+    // };
 
-    const handleChangeOrder = (event: SelectChangeEvent) => {
-        setOrder(event.target.value);
-    };
+    // const handleChangeOrder = (event: SelectChangeEvent) => {
+    //     setOrder(event.target.value);
+    // };
 
     const handleChangeName = (event : any) => {
         if (event.type === 'click') {
@@ -108,18 +108,18 @@ const Stats = () => {
             url += league ? `?league=${league}` : '';
             prev = true;
         }
-        if (prev) {
-            url += orderby ? `&orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
-        } else if (orderby) {
-            url += orderby ? `?orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
-            prev = true;
-        }
-        if (prev) {
-            url += order ? `&order=${order === 'Ascending' ? '1' : '0'}` : '';
-        } else if (order) {
-            url += order ? `?order=${order === 'Ascending' ? '1' : '0'}` : '';
-            prev = true;
-        }
+        // if (prev) {
+        //     url += orderby ? `&orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
+        // } else if (orderby) {
+        //     url += orderby ? `?orderby=${scope === 'Player' ? playerMap.get(orderby) : teamMap.get(orderby) }` : '';
+        //     prev = true;
+        // }
+        // if (prev) {
+        //     url += order ? `&order=${order === 'Ascending' ? '1' : '0'}` : '';
+        // } else if (order) {
+        //     url += order ? `?order=${order === 'Ascending' ? '1' : '0'}` : '';
+        //     prev = true;
+        // }
         if (prev) {
             url += name ? `&name=${name}` : '';
         } else if (name) {
@@ -131,7 +131,8 @@ const Stats = () => {
             .then((response) => response.json())
             .then((json) => setRows(json));
 
-    }, [scope, league, orderby, order, name]);
+    // }, [scope, league, orderby, order, name]);
+    }, [scope, league, name]);
     
     return (
         <Box className={scss.wrapper}>
@@ -161,12 +162,12 @@ const Stats = () => {
                             onChange={handleChangeLeague}
                             label="League"
                         >
-                        <MenuItem value={'Default'}>Default</MenuItem>
+                        <MenuItem value={null}>All</MenuItem>
                         {leagues.map((league) => <MenuItem value={league?.League}>{league?.League}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </Box>
-                <Box sx={{marginBottom: 5}}>
+                {/* <Box sx={{marginBottom: 5}}>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120, marginTop: 5, position: 'sticky' }}>
                         <InputLabel id="orderby-label">Order By</InputLabel>
                         <Select
@@ -176,7 +177,7 @@ const Stats = () => {
                             onChange={handleChangeOrderBy}
                             label="Patch"
                         >
-                        <MenuItem value={'Default'}>Default</MenuItem>
+                        <MenuItem value={null}>All</MenuItem>
                         {scope === 'Player' ? playerOrders.map((order) => <MenuItem value={order}>{order}</MenuItem>) : teamOrders.map((order) => <MenuItem value={order}>{order}</MenuItem>)}
                         </Select>
                     </FormControl>
@@ -191,12 +192,11 @@ const Stats = () => {
                             onChange={handleChangeOrder}
                             label="Patch"
                         >
-                        <MenuItem value={'Default'}>Default</MenuItem>
                         <MenuItem value="Ascending">Ascending</MenuItem>
                         <MenuItem value="Descending">Descending</MenuItem>
                         </Select>
                     </FormControl>
-                </Box>
+                </Box> */}
                 <Box sx={{marginBottom: 5}}>
                     <Autocomplete
                         freeSolo

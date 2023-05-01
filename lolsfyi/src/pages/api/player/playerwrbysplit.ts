@@ -3,7 +3,6 @@ import db from '../../../lib/db';
 //根据playerid查找其对应的多赛季胜率，优化先查名字
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Extract query parameters
-  console.log("11111");
   try {
     const { name } = req.query;
     if (!name) {

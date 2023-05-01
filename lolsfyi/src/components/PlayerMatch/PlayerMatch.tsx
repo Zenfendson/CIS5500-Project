@@ -3,7 +3,7 @@ import React from "react";
 import scss from "./PlayerMatch.module.scss";
 import Image from "next/image";
 import { MatchProps } from "@/pages/matches/Matches";
-import { PLACEHOLDER_PLAYER } from "@/constants";
+import { TEAM_URL } from "@/constants";
 
 const PlayerMatches = (match : MatchProps) => {
 
@@ -14,7 +14,7 @@ const PlayerMatches = (match : MatchProps) => {
                     <Grid container xs={12} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                         <Grid item xs={5}>
                             <Box className={scss.side}>
-                                <Image src={match.teamRedLogo ? match.teamRedLogo : PLACEHOLDER_PLAYER} width={50} height={50} alt={match.teamRed} />
+                                <Image src={TEAM_URL(match?.teamRed)} width={50} height={50} alt={match.teamRed} />
                                 <Typography variant="caption"> {match.teamRed} </Typography>
                             </Box>
                         </Grid>
@@ -23,7 +23,7 @@ const PlayerMatches = (match : MatchProps) => {
                         </Grid>
                         <Grid item xs={5}>
                             <Box className={scss.side}>
-                                <Image src={match.teamBlueLogo ? match.teamBlueLogo : PLACEHOLDER_PLAYER} width={50} height={50} alt={match.teamBlue} />
+                                <Image src={TEAM_URL(match?.teamBlue)} width={50} height={50} alt={match.teamBlue} />
                                 <Typography variant="caption"> {match.teamBlue} </Typography>
                             </Box> 
                         </Grid>

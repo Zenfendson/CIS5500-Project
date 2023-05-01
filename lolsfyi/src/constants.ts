@@ -25,16 +25,17 @@ export const TEAM_LOGOS = new Map([
   
 
 export const CHAMPION_URL = (name : string) => {
-  if (name === 'Wukong') name = 'monkeyking';
-  name = name.toLowerCase().replace(/[.,' ]/g,"").trim();
+  if (name) {
+    if (name === 'Wukong') name = 'monkeyking';
+    name = name.toLowerCase().replace(/[.,' ]/g,"").trim();
+  }
   return `https://cdn.mobalytics.gg/assets/lol/images/dd/champions/icons/${name}.png`;
 };
 
 export const TEAM_URL = (name : string) => {
   if (name) {
-    name = name.toLowerCase().replaceAll(' ',"").trim();
+    name = name?.toLowerCase().replaceAll(' ',"").trim();
     if (TEAM_LOGOS.has(name)) return TEAM_LOGOS.get(name);
   }
-
   return PLACEHOLDER_TEAM;
 }

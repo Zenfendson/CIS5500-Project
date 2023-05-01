@@ -4,7 +4,7 @@ import db from '../../lib/db';
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     
-    const { league, page=1, name, team, order , asc} = req.query;
+    const { league,name, team} = req.query;
     const conditions = {
         league: league && `Ps.league='${league}'`,
         team: team && `Ps.Teamname=${team}`,
@@ -28,10 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     //            on Ps.Name = pp.playername
     //            where Ps.League = M.League) resulttable
     //            Group by  playername`
-         const pageSize = 20; // Define the number of results per page
-        const pageNumber = parseInt(page as string);
-        const offset = (pageNumber - 1) * pageSize;
-        if (!order){
+        
             try {
                 // const sqlQuery = `SELECT Teamname as teamname, 
                 // playername as id,
@@ -75,7 +72,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 console.error(error);
                 res.status(500).json({ error: 'Error fetching data from the database' });
               }
-        }
 
         // if (order) {
         //     try {

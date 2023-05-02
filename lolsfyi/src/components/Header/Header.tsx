@@ -2,12 +2,13 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { useRouter } from 'next/router';
 import ThemeToggleButton from '../ThemeToggleButton/ThemeToggleButton';
 import { useMediaQuery } from '@mui/material';
+import { LOL_ESPORTS } from '@/constants';
+import Image from 'next/image';
 
 const pages = ['Matches', 'Stats', 'Player', 'Team'];
 export type HeaderProps = {
@@ -28,43 +29,8 @@ function Header(props: HeaderProps) {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LoLs.FYI
-          </Typography>
-
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LoLs.FYI
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Image src={LOL_ESPORTS} alt="LoL" width={120} height={64} onClick={(event) => router.push(`/`)}/>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', marginLeft: '20px'} }}>
             {pages.map((page) => (
               <Button
                 key={page}

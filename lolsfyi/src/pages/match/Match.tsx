@@ -62,10 +62,10 @@ const Match = () => {
                 .then((json) => setMatchDetailBlue(json?.[0]));
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/match/playerdetail?matchid=${matchID}&side=Red`)
                 .then((response) => response.json())
-                .then((json) => setPlayerDetailRed(json));
+                .then((json) => setPlayerDetailRed(json?.sort((a, b) => a.position.localeCompare(b.position))));
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/match/playerdetail?matchid=${matchID}&side=Blue`)
                 .then((response) => response.json())
-                .then((json) => setPlayerDetailBlue(json));
+                .then((json) => setPlayerDetailBlue(json?.sort((a, b) => a.position.localeCompare(b.position))));
     }, [matchID]);
 
     const DualPerformance = (performances: Object) => {

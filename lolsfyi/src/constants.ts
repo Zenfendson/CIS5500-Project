@@ -1,6 +1,8 @@
 export const PLACEHOLDER_PLAYER = 'https://www.factor.gg/_next/image?url=https%3A%2F%2Ffactorassets.global.ssl.fastly.net%2Fplayer-headshots%2Fdefault.png&w=128&q=100';
 export const PLACEHOLDER_TEAM = 'https://logos-world.net/wp-content/uploads/2021/09/LoL-Esports-Emblem.png';
 export const PLACEHOLDER_CHAMPION = "https://cdn.mobalytics.gg/assets/lol/images/dd/champions/icons/monkeyking.png";
+export const LOL_LOGO = "https://am-a.akamaihd.net/image?resize=166:64&f=http%3A%2F%2Fassets.lolesports.com%2Fwatch%2Ffooter%2Flol.png";
+export const LOL_ESPORTS = "https://logos-world.net/wp-content/uploads/2021/09/LoL-Esports-Logo-700x394.png";
 
 export const TEAM_LOGOS = new Map([
     ['edwardgaming', 'https://am-a.akamaihd.net/image?resize=140:&f=http%3A%2F%2Fstatic.lolesports.com%2Fteams%2F1631819297476_edg-2021-worlds.png'],
@@ -25,14 +27,16 @@ export const TEAM_LOGOS = new Map([
   
 
 export const CHAMPION_URL = (name : string) => {
-  if (name === 'Wukong') name = 'monkeyking';
-  name = name.toLowerCase().replace(/[.,' ]/g,"").trim();
+  if (name) {
+    if (name === 'Wukong') name = 'monkeyking';
+    name = name.toLowerCase().replace(/[.,' ]/g,"").trim();
+  }
   return `https://cdn.mobalytics.gg/assets/lol/images/dd/champions/icons/${name}.png`;
 };
 
 export const TEAM_URL = (name : string) => {
   if (name) {
-    name = name.toLowerCase().replaceAll(' ',"").trim();
+    name = name?.toLowerCase().replaceAll(' ',"").trim();
     if (TEAM_LOGOS.has(name)) return TEAM_LOGOS.get(name);
   }
   return PLACEHOLDER_TEAM;

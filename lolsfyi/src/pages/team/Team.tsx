@@ -71,7 +71,6 @@ const Team = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/recentmatches?teamname=${team}&page=${page}`)
                 .then((response) => response.json())
                 .then((json) => {
-                    console.log(json)
                     setMatches(json);
                     setTotalPages(json[0]?.maxPagination);
                 });
@@ -111,8 +110,8 @@ const Team = () => {
     }
 
     const TeamMatch = ( twoTeamPerformance : TwoTeamPerformance ) => {
-        const redPicks = twoTeamPerformance.red_champions.split(',');
-        const bluePicks = twoTeamPerformance.blue_champions.split(',');
+        const redPicks = twoTeamPerformance.red_champions ? twoTeamPerformance.red_champions.split(',') : [];
+        const bluePicks = twoTeamPerformance.blue_champions ? twoTeamPerformance.blue_champions.split(',') : [];
         return (
             <ListItem>
                 <ListItemButton sx={{display: 'flex', flexDirection: 'column'}} onClick={(event) => handleSelectMatch(event, twoTeamPerformance.MatchID)}>

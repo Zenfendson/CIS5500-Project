@@ -11,18 +11,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const whereClause = Object.values(conditions).filter(Boolean).join(' AND ');
             try {
                 const sqlQuery = 
-                  `select TeamPerformance.Teamid as id, TeamPerformance.Teamname, tl.league as League,
-                  CASE
-                    WHEN COUNT(*) < 3 THEN NULL
-                    ELSE CAST(SUM(TeamPerformance.result) AS FLOAT) / COUNT(*)
-                  END AS win_rate
-                from TeamPerformance
-                join (
-                select * from
-                  Team
-                  ${whereClause ? ` where ${whereClause}` : ''}) as tl
-                on tl.teamid = TeamPerformance.Teamid
-                Group by  TeamPerformance.Teamid, TeamPerformance.Teamname;`;
+                    `select TeamPerformance.Teamid as id, TeamPerformance.Teamname, tl.league as League,
+                    CASE
+                      WHEN COUNT(*) < 3 THEN NULL
+                      ELSE CAST(SUM(TeamPerformance.result) AS FLOAT) / COUNT(*)
+                    END AS win_rate
+                  from TeamPerformance
+                  join (
+                  select * from
+                    Team
+                     ${whereClause ? ` where ${whereClause}` : ''}) as tl
+                  on tl.teamid = TeamPerformance.Teamid
+                  Group by  TeamPerformance.Teamid, TeamPerformance.Teamname;`;
                 const results = await db.query(sqlQuery);
                 // Close the database connection
                 await db.end();

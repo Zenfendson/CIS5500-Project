@@ -7,3 +7,6 @@ node version > 18.7.0
 npm install
 npm run dev
 ```
+
+## For all code used for cleaning, wrangling, and ingesting the data
+https://colab.research.google.com/drive/1d-JiEUkf463JZUuE1KmycLgGnNluPtyG?usp=sharing

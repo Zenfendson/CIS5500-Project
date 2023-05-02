@@ -2,6 +2,8 @@ import { Box, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect } from "react";
 import scss from "./Stats.module.scss";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 // const playerOrders = [
 //     'Team', 'League', 'Position', 'Player Name', 'Win Rate', 'Wins', 'Loses',
@@ -12,12 +14,12 @@ import scss from "./Stats.module.scss";
 // ]
 
 const playerCols: GridColDef[] = [
-    { field: 'id', headerName: 'Player', width: 150 },
+    { field: 'id', headerName: 'Player', width: 150},
     { field: 'teamname', headerName: 'Team', width: 150 },
     { field: 'league', headerName: 'League', width: 150 },
     { field: 'position', headerName: 'Position', width: 150 },
     { field: 'winrate', headerName: 'Win Rate', width: 150, valueFormatter: (params) => `${Math.round(params.value * 10000) / 100}%` },
-    { field: 'numberofwin', headerName: 'Wins', width: 150 },
+    { field: 'numberofwin', headerName: 'Wins', width: 150},
     { field: 'numberofloses', headerName: 'Loses', width: 150 },
 ]
 
@@ -59,6 +61,7 @@ const Stats = () => {
         pageSize: 10,
         page: 0,
     });
+    const router = useRouter();
 
     const handleChangeScope = (event: SelectChangeEvent) => {
         setScope(event.target.value);
@@ -219,6 +222,13 @@ const Stats = () => {
                     // disableSelectionOnClicks
                     // experimentalFeatures={{ newEditingApi: true }}
                     loading={rows.length === 0}
+                    onCellClick={(params) => {
+                        if (scope === 'Player') {
+                            router.push(`/player?name=${params.row.id}`);
+                        } else {
+                            router.push(`/team?name=${params.row.Teamname}`);
+                        }
+                    }}
                 />
             </Box>  
         </Box>

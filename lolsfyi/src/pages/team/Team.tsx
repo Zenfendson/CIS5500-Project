@@ -71,7 +71,6 @@ const Team = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/team/recentmatches?teamname=${team}&page=${page}`)
                 .then((response) => response.json())
                 .then((json) => {
-                    console.log(json)
                     setMatches(json);
                     setTotalPages(json[0]?.maxPagination);
                 });

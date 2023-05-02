@@ -112,27 +112,29 @@ const Player = () => {
     }, [router.query]);
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerinfo?name=${player}`)  
-            .then((response) => response.json())
-            .then((json) => setPlayerInfo(json[0]));
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerstats?name=${player}`)  
-            .then((response) => response.json())
-            .then((json) => setPlayerStats(json[0]));
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerwrbysplit?name=${player}`)
-            .then((response) => response.json())
-            .then((json) => setPlayerSplits(json[0]));
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&page=${page}`)  
-            .then((response) => response.json())
-            .then((json) => {
-                setPlayerMatches(json);
-                setPagenum(json[0]?.maxPagination);
-            });
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/yearoptions?name=${player}`)
-            .then((response) => response.json())
-            .then((json) => setYears(json.map((years : Object) => years.year)));
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/leagueoptions?name=${player}`)
-            .then((response) => response.json())
-            .then((json) => setLeagues(json.map((leagues : Object) => leagues.league)));
+        if (player && isShow) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerinfo?name=${player}`)  
+                .then((response) => response.json())
+                .then((json) => setPlayerInfo(json[0]));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerstats?name=${player}`)  
+                .then((response) => response.json())
+                .then((json) => setPlayerStats(json[0]));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/playerwrbysplit?name=${player}`)
+                .then((response) => response.json())
+                .then((json) => setPlayerSplits(json[0]));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/matches?name=${player}&page=${page}`)  
+                .then((response) => response.json())
+                .then((json) => {
+                    setPlayerMatches(json);
+                    setPagenum(json[0]?.maxPagination);
+                });
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/yearoptions?name=${player}`)
+                .then((response) => response.json())
+                .then((json) => setYears(json.map((years : Object) => years.year)));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/player/leagueoptions?name=${player}`)
+                .then((response) => response.json())
+                .then((json) => setLeagues(json.map((leagues : Object) => leagues.league)));
+        }
     }, [isShow, page, player]);
 
     useEffect(() => {

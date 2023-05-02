@@ -1,0 +1,29 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.card {
+    display: flex;
+    width: 50vw;
+    height: 12vh;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+.logo {
+    width: 7vh;
+    height: 7vh;
+    margin: 0 1vw;
+}
+
+.logo_with_name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
